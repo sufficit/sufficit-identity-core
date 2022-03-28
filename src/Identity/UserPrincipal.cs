@@ -61,10 +61,10 @@ namespace Sufficit.Identity
                     }
                 } else if(claim.Type == Sufficit.Identity.ClaimTypes.MicrosoftRole || claim.Type == Sufficit.Identity.ClaimTypes.Role)
                 {
-                    if(claim.Value == "administrator")
-                    {
-                        roles.Add(new AdministratorRole().ID);  
-                    }
+                    if (claim.Value == "administrator")                    
+                        roles.Add(Guid.Parse(AdministratorRole.UniqueID));
+                    else if (claim.Value == "manager")
+                        roles.Add(Guid.Parse(ManagerRole.UniqueID));
                 }
             }
 

@@ -6,7 +6,7 @@ namespace Sufficit.Identity
 {
     public class AuthenticationUserOptions
     {        
-        public string NameClaim {get; set;} = "name";
+        public string NameClaim { get; set; } = "name";
 
         /// <summary>
         /// Gets or sets the value to use for the System.Security.Claims.ClaimsIdentity.AuthenticationType.  
