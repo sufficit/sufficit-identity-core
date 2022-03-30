@@ -25,5 +25,7 @@ namespace Sufficit.Identity
         /// Resume of roles from user policies
         /// </summary>
         IEnumerable<IRole> Roles { get; }
+
+        bool IsInRole(string roleName); 
     }
 }
