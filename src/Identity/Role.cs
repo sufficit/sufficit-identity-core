@@ -19,6 +19,7 @@ namespace Sufficit.Identity
             return false;
         }
 
-        public static IEnumerable<IRole> Enumerator { get; } = Utils.GetEnumerableOfType<IRole>();
+        public static IEnumerable<IRole> Enumerator { get; }
+            = Utils.GetCollectionOfType<IRole>();
     }
 }

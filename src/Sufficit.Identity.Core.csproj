@@ -43,9 +43,13 @@
 			<PackagePath></PackagePath>
 		</None>
 	</ItemGroup>
-	
-	<ItemGroup Label="Sufficit Dependencies">
-	  <PackageReference Include="Sufficit.Utils" Version="1.22.*" />
+
+	<ItemGroup Label="Sufficit Dependencies on Packing" Condition=" '$(Configuration)' == 'Packing' ">
+		<PackageReference Include="Sufficit.Utils" Version="1.22.*" />
+	</ItemGroup>
+
+	<ItemGroup Label="Sufficit Local Dependencies" Condition=" '$(Configuration)' != 'Packing' ">
+		<ProjectReference Include="..\..\sufficit-utils\src\Sufficit.Utils.csproj" />
 	</ItemGroup>
 
 </Project>

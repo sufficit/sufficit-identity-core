@@ -33,10 +33,8 @@ namespace Sufficit.Identity
 
         public bool Equals(IDirective other) => this.ID == other?.ID;
 
-        public static IEnumerable<IDirective> Enumerator { get; } =
-
-            // removing Sufficit.Identity.DirectiveBase, empty base
-            Utils.GetEnumerableOfType<IDirective>().Where(s => !string.IsNullOrWhiteSpace(s.Key));
+        public static IEnumerable<IDirective> Enumerator { get; }
+            = Utils.GetCollectionOfType<IDirective>().Where(s => !string.IsNullOrWhiteSpace(s.Key));
 
         #endregion
     }
