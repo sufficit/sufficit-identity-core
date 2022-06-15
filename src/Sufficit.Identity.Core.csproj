@@ -52,4 +52,8 @@
 		<ProjectReference Include="..\..\sufficit-utils\src\Sufficit.Utils.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <PackageReference Include="System.Text.Json" Version="6.0.3" />
+	</ItemGroup>
+
 </Project>

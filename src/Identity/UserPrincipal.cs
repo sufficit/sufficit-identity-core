@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
+using System.Text.Json;
 using Sufficit.Identity;
 
 namespace Sufficit.Identity
@@ -15,7 +16,7 @@ namespace Sufficit.Identity
             Policies = new HashSet<UserPolicyBase>();
             Roles = new HashSet<IRole>();
 
-            Populate();
+            Populate(this);
         }
 
         public UserPrincipal(ClaimsIdentity identity)
@@ -25,7 +26,7 @@ namespace Sufficit.Identity
             Policies = new HashSet<UserPolicyBase>();
             Roles = new HashSet<IRole>();
 
-            Populate();
+            Populate(this);
         }
 
         public UserPrincipal(ClaimsPrincipal principal , AuthenticationUserOptions options)
@@ -36,35 +37,41 @@ namespace Sufficit.Identity
             Policies = new HashSet<UserPolicyBase>();
             Roles = new HashSet<IRole>();
 
-            Populate();
+            Populate(this);
         }
 
         public virtual ICollection<UserPolicyBase> Policies { get; }
 
         public virtual ICollection<IRole> Roles { get; }
 
-
-        private void Populate()
+        static void Populate(UserPrincipal user)
         {
             var roles = new HashSet<Guid>();
-            foreach (var claim in this.Claims)
+            foreach (var claim in user.Claims)
             {
-                if (claim.Type == Sufficit.Identity.ClaimTypes.Directive)
+                if (claim.Type == ClaimTypes.Directive)
                 {
-                    var policy = claim.ToUserPolicy();
-                    if (policy != null && !Policies.Contains(policy))
+                    foreach (var text in DeserializeSingleOrList(claim.Value))
                     {
-                        Policies.Add(policy);
+                        var policy = new Claim(ClaimTypes.Directive, text).ToUserPolicy();
+                        if (policy != null && !user.Policies.Contains(policy))
+                        {
+                            user.Policies.Add(policy);
 
-                        if(policy.Directive.IDRole != Guid.Empty)
-                            roles.Add(policy.Directive.IDRole);
+                            if (policy.Directive.IDRole != Guid.Empty)
+                                roles.Add(policy.Directive.IDRole);
+                        }
                     }
-                } else if(claim.Type == Sufficit.Identity.ClaimTypes.MicrosoftRole || claim.Type == Sufficit.Identity.ClaimTypes.Role)
+                } 
+                else if(claim.Type == Sufficit.Identity.ClaimTypes.MicrosoftRole || claim.Type == Sufficit.Identity.ClaimTypes.Role)
                 {
-                    if (claim.Value == "administrator")                    
-                        roles.Add(Guid.Parse(AdministratorRole.UniqueID));
-                    else if (claim.Value == "manager")
-                        roles.Add(Guid.Parse(ManagerRole.UniqueID));
+                    foreach (var text in DeserializeSingleOrList(claim.Value))
+                    {
+                        if (text == "administrator")
+                            roles.Add(Guid.Parse(AdministratorRole.UniqueID));
+                        else if (text == "manager")
+                            roles.Add(Guid.Parse(ManagerRole.UniqueID));
+                    }                    
                 }
             }
 
@@ -73,9 +80,27 @@ namespace Sufficit.Identity
                 var role = Role.Enumerator.FirstOrDefault(s => s.ID == roleid);
                 if (role != null)
                 {
-                    ((ClaimsIdentity)this.Identity).AddClaim(new Claim(Sufficit.Identity.ClaimTypes.Role, role.NormalizedName));
-                    Roles.Add(role);
+                    user.Roles.Add(role);
+
+                    // For compatibility to another systems
+                    var identity = (ClaimsIdentity)user.Identity;
+                    if (!identity.Claims.Any(s => s.Type == ClaimTypes.Role && s.Value == role.NormalizedName))
+                    {
+                        var newClaim = new Claim(Sufficit.Identity.ClaimTypes.Role, role.NormalizedName);
+                        identity.AddClaim(newClaim);
+                    }
                 }
+            }
+        }
+
+        public static IEnumerable<string> DeserializeSingleOrList(string jsonText)
+        {
+            if (!jsonText.StartsWith("["))
+                yield return jsonText;
+            else
+            {
+                foreach (var text in JsonSerializer.Deserialize<string[]>(jsonText))
+                    yield return text;
             }
         }
 
