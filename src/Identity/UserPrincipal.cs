@@ -84,7 +84,7 @@ namespace Sufficit.Identity
 
                     // For compatibility to another systems
                     var identity = (ClaimsIdentity)user.Identity;
-                    if (!identity.Claims.Any(s => s.Type == ClaimTypes.Role && s.Value == role.NormalizedName))
+                    if (!identity.Claims.ToList().Any(s => s.Type == ClaimTypes.Role && s.Value == role.NormalizedName))
                     {
                         var newClaim = new Claim(Sufficit.Identity.ClaimTypes.Role, role.NormalizedName);
                         identity.AddClaim(newClaim);
