@@ -16,7 +16,7 @@ namespace Sufficit.Identity
         public static Guid GetUserId(this ClaimsPrincipal source)
         {
             var claim = source.Claims.FirstOrDefault(s => s.Type == ClaimTypes.UserID || s.Type == ClaimTypes.MicrosoftNameIdentifier);
-            if (claim != null) return Guid.Parse(claim.Value);
+            if (claim != null && Guid.TryParse(claim.Value, out Guid result)) return result;
             return Guid.Empty;
         }
     }
