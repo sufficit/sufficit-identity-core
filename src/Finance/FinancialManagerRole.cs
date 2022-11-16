@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Sufficit.Financeiro
+namespace Sufficit.Finance
 {
     public struct FinancialManagerRole : IRole
     {

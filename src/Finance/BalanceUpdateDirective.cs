@@ -3,19 +3,19 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Sufficit.Financeiro
+namespace Sufficit.Finance
 {
-    public class BankBilletDirective : Directive
+    public class BalanceUpdateDirective : Directive
     {
-        public const string UniqueID = "1cea282f-5b36-45d6-85e6-d1ad866d2b27";
+        public const string UniqueID = "cf50a644-9347-48d9-9296-18973a252a55";
         public const string RoleID = FinancialRole.UniqueID;
 
         public override Guid ID => Guid.Parse(UniqueID);
 
         public override Guid IDRole => Guid.Parse(RoleID);
 
-        public override string Name => "acesso a boletos";
+        public override string Name => "realizar movimentação financeira";
 
-        public override string Key => "bankbillet";
+        public override string Key => "balanceupdate";
     }
 }
