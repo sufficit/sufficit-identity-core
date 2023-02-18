@@ -5,6 +5,7 @@
 		<RootNamespace>Sufficit</RootNamespace>
 		<LangVersion>8.0</LangVersion>
 		<RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+		<Nullable>enable</Nullable>
 	</PropertyGroup>
 	
 	<PropertyGroup Label="Sufficit Versioning">

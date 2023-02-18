@@ -20,18 +20,15 @@ namespace Sufficit.Identity
 
         #region FACILITADORES
  
-        public static implicit operator Guid (Directive directive) => directive != null ? directive.ID : Guid.Empty;
+        public static implicit operator Guid (Directive? directive) => directive != null ? directive.ID : Guid.Empty;
 
-        public override bool Equals(object obj)
-        {
-            if (obj == null) return false;
-            if (obj is IDirective directive) return directive?.ID == ID;
-            return base.Equals(obj);
-        }
+        public override sealed bool Equals(object obj)
+            => obj is IDirective p && p.ID == ID;
 
-        public override int GetHashCode() => ID.GetHashCode();  
+        public override sealed int GetHashCode() 
+            => ID.GetHashCode();  
 
-        public bool Equals(IDirective other) => this.ID == other?.ID;
+        public bool Equals(IDirective? other) => this.ID == other?.ID;
 
         public static IEnumerable<IDirective> Enumerator { get; }
             = Utils.GetCollectionOfType<IDirective>().Where(s => !string.IsNullOrWhiteSpace(s.Key));

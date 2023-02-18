@@ -13,10 +13,10 @@ namespace Sufficit.Identity
 
         public virtual Guid IDRole { get; set; }
 
-        public virtual string Name { get; set; }
+        public virtual string Name { get; set; } = default!;
 
-        public virtual string Description { get; set; }
+        public virtual string Description { get; set; } = default!;
 
-        public virtual string Key { get; set; }
+        public virtual string Key { get; set; } = default!;
     }
 }

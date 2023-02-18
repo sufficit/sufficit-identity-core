@@ -106,8 +106,9 @@ namespace Sufficit.Identity
                 yield return jsonText;
             else
             {
-                foreach (var text in JsonSerializer.Deserialize<string[]>(jsonText))
-                    yield return text;
+                foreach (var text in JsonSerializer.Deserialize<string[]>(jsonText) ?? Array.Empty<string>())
+                    if(!string.IsNullOrWhiteSpace(text))
+                        yield return text;
             }
         }
 

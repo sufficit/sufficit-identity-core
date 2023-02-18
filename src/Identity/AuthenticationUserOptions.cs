@@ -11,6 +11,6 @@ namespace Sufficit.Identity
         /// <summary>
         /// Gets or sets the value to use for the System.Security.Claims.ClaimsIdentity.AuthenticationType.  
         /// </summary>    
-        public string AuthenticationType { get; set; }
+        public string AuthenticationType { get; set; } = string.Empty;
     }
 }

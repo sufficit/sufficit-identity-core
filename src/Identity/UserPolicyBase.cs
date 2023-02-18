@@ -26,7 +26,7 @@ namespace Sufficit.Identity
         public Guid IDContext { get; set; }
 
         public override bool Equals(object other) =>
-           other is UserPolicyBase p && (p.IDContext, p.IDDirective).Equals((IDContext, IDDirective));
+           other is UserPolicyBase p && p.IDContext == IDContext && p.IDDirective == IDDirective;
 
         public override int GetHashCode() => 
             (IDContext, IDDirective).GetHashCode();
