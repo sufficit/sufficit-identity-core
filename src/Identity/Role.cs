@@ -10,11 +10,11 @@ namespace Sufficit.Identity
         public static IEnumerable<IRole> Enumerator { get; }
             = Utils.GetCollectionOfType<IRole>();
 
-        public static bool Compare(this IRole source, string role)
+        public static bool Compare(this IRole source, string? role)
         {
             if (!string.IsNullOrWhiteSpace(role))
             {
-                string newRole = role.ToLowerInvariant().Trim();
+                string newRole = role!.ToLowerInvariant().Trim();
                 if (Guid.TryParse(role, out Guid roleId))
                 {
                     if (source.ID == roleId)

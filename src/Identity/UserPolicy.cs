@@ -27,7 +27,7 @@ namespace Sufficit.Identity
         {
             if (!Guid.TryParse(context, out Guid IDContext)) throw new ArgumentException("invalid context guid format");
             var directive = Sufficit.Identity.Directive.Enumerator.FirstOrDefault(s => s.Key == key);
-            if (directive == null) throw new ArgumentException("directive key not found");
+            if (directive == null) throw new ArgumentException($"directive key not found: {key}", nameof(key));
 
             return new UserPolicy(IDContext, directive);
         }

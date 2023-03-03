@@ -1,4 +1,5 @@
 ﻿using Sufficit.Identity;
+using Sufficit.Sales;
 using System;
 
 namespace Sufficit.Vendas
