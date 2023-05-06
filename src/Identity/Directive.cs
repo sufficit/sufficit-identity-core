@@ -22,7 +22,7 @@ namespace Sufficit.Identity
  
         public static implicit operator Guid (Directive? directive) => directive != null ? directive.ID : Guid.Empty;
 
-        public override sealed bool Equals(object obj)
+        public override sealed bool Equals(object? obj)
             => obj is IDirective p && p.ID == ID;
 
         public override sealed int GetHashCode() 

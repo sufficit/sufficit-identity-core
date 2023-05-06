@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Sufficit.Telephony
 {
+    /// <summary>
+    /// acesso ao cliente de telefonia
+    /// </summary>
     public class TelephonyClientDirective : Directive
     {
         public const string UniqueID = "825e32b4-40d4-4f19-833c-7663bb9c26f7";

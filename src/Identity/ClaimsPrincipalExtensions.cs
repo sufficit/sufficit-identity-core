@@ -13,10 +13,13 @@ namespace Sufficit.Identity
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static Guid GetUserId(this ClaimsPrincipal source)
+        public static Guid GetUserId(this ClaimsPrincipal? source)
         {
-            var claim = source.Claims?.FirstOrDefault(s => s.Type == ClaimTypes.UserID || s.Type == ClaimTypes.MicrosoftNameIdentifier);
-            if (claim != null && Guid.TryParse(claim.Value, out Guid result)) return result;
+            if (source != null)
+            {
+                var claim = source.Claims?.FirstOrDefault(s => s.Type == ClaimTypes.UserID || s.Type == ClaimTypes.MicrosoftNameIdentifier);
+                if (claim != null && Guid.TryParse(claim.Value, out Guid result)) return result;
+            }
             return Guid.Empty;
         }
     }
