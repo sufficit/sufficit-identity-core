@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 
 namespace Sufficit.Identity
@@ -25,5 +26,12 @@ namespace Sufficit.Identity
 
         public static bool IsInRole<T, U>(this UserPrincipal source) where T : IRole 
             => source.IsInRole(new[] { typeof(T), typeof(U) });
+
+        /// <summary>
+        /// Get user Guid ID from ClaimTypes.UserID
+        /// </summary>
+        /// <returns></returns>
+        public static Guid GetUserId(this UserPrincipal? source)
+            => (source as ClaimsPrincipal).GetUserId();
     }
 }
