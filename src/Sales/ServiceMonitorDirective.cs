@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Sufficit.Vendas
+namespace Sufficit.Sales
 {
     /// <summary>
     /// Used to include on group Sales Representative 

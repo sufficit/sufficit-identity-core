@@ -17,7 +17,7 @@ namespace Sufficit.Identity
 
         public IDirective Directive { get; }
 
-        public override bool Equals(object other) => 
+        public override bool Equals(object other) =>
             base.Equals(other);
 
         public override int GetHashCode() => 
@@ -25,7 +25,7 @@ namespace Sufficit.Identity
 
         public static UserPolicy Generate(string key, string context)
         {
-            if (!Guid.TryParse(context, out Guid IDContext)) throw new ArgumentException("invalid context guid format");
+            if (!Guid.TryParse(context, out Guid IDContext)) throw new ArgumentException($"invalid context guid format: {context}", nameof(context));
             var directive = Sufficit.Identity.Directive.Enumerator.FirstOrDefault(s => s.Key == key);
             if (directive == null) throw new ArgumentException($"directive key not found: {key}", nameof(key));
 

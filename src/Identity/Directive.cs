@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Sufficit.Identity
 {
@@ -13,10 +14,10 @@ namespace Sufficit.Identity
 
         public abstract string Name { get; }
 
-        public virtual string Description => string.Empty;
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull | JsonIgnoreCondition.WhenWritingDefault)]
+        public virtual string? Description { get; }
 
         public abstract string Key { get; }
-
 
         #region FACILITADORES
  

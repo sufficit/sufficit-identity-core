@@ -1,8 +1,7 @@
 ﻿using Sufficit.Identity;
-using Sufficit.Sales;
 using System;
 
-namespace Sufficit.Vendas
+namespace Sufficit.Sales
 {
     public class ClientAdminDirective : Directive
     {
