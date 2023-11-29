@@ -8,6 +8,6 @@ namespace Sufficit.Identity
 {
     public interface ITokenProvider
     {
-        Task<string> GetTokenAsync();
+        Task<string?> GetTokenAsync();
     }
 }

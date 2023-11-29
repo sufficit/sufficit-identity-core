@@ -29,6 +29,12 @@
 		<PackageReadmeFile>readme.md</PackageReadmeFile>
 		<PackageIcon>icon.png</PackageIcon>
 	</PropertyGroup>
+	
+	<ItemGroup>
+	  <Compile Remove="Vendas\**" />
+	  <EmbeddedResource Remove="Vendas\**" />
+	  <None Remove="Vendas\**" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<None Include="../icon.png">
@@ -55,10 +61,6 @@
 
 	<ItemGroup>
 	  <PackageReference Include="System.Text.Json" Version="7.*" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Vendas\" />
 	</ItemGroup>
 
 </Project>

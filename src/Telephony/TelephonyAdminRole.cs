@@ -5,16 +5,16 @@ using System.Text;
 
 namespace Sufficit.Telephony
 {
-    public struct TelephonySupervisorRole : IRole
+    public struct TelephonyAdminRole : IRole
     {
-        public const string UniqueID = "df828011-e0de-4cb6-8481-2abf912115cf";
+        public const string UniqueID = "0a23a38a-d4e4-4b64-98fa-9cb6a4aaa61f";
 
         public Guid ID => Guid.Parse(UniqueID);
 
-        public string Name => "Telephony Supervisor";
+        public string Name => "Telephony Administrator";
 
-        public string NormalizedName => "telephonysupervisor";
+        public string NormalizedName => "telephonyadmin";
 
-        string[] IRole.Filter => new[] { NormalizedName, "supervisor de telefonia" };
+        string[] IRole.Filter => new[] { NormalizedName, "administrador de telefonia" };
     }
 }
