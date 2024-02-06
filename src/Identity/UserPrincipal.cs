@@ -78,22 +78,23 @@ namespace Sufficit.Identity
             if (roles.Any())
             {
                 // For compatibility to another systems
-                var identity = (ClaimsIdentity)user.Identity;
-
-                // avoid enumerate multiple times
-                var claims = identity.Claims.ToList();
-
-                foreach (var roleid in roles)
+                if (user.Identity is ClaimsIdentity identity)
                 {
-                    var role = Role.Enumerator.FirstOrDefault(s => s.ID == roleid);
-                    if (role != null)
-                    {
-                        user.Roles.Add(role);
+                    // avoid enumerate multiple times
+                    var claims = identity.Claims.ToList();
 
-                        if (!claims.Any(s => s.Type == ClaimTypes.Role && s.Value == role.NormalizedName))
+                    foreach (var roleid in roles)
+                    {
+                        var role = Role.Enumerator.FirstOrDefault(s => s.ID == roleid);
+                        if (role != null)
                         {
-                            var newClaim = new Claim(Sufficit.Identity.ClaimTypes.Role, role.NormalizedName);
-                            identity.AddClaim(newClaim);
+                            user.Roles.Add(role);
+
+                            if (!claims.Any(s => s.Type == ClaimTypes.Role && s.Value == role.NormalizedName))
+                            {
+                                var newClaim = new Claim(Sufficit.Identity.ClaimTypes.Role, role.NormalizedName);
+                                identity.AddClaim(newClaim);
+                            }
                         }
                     }
                 }

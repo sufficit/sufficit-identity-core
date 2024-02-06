@@ -17,7 +17,7 @@ namespace Sufficit.Identity
 
         public IDirective Directive { get; }
 
-        public override bool Equals(object other) =>
+        public override bool Equals(object? other) =>
             base.Equals(other);
 
         public override int GetHashCode() => 
