@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Net;
 
 namespace Sufficit.Identity
 {
@@ -29,7 +30,7 @@ namespace Sufficit.Identity
                     var accessToken = await _token.GetTokenAsync();
 
                     if (string.IsNullOrWhiteSpace(accessToken))
-                        throw new Exception("access token not available at this time");
+                        return new HttpResponseMessage(HttpStatusCode.Unauthorized) { ReasonPhrase = "access token not available at this time", RequestMessage = request };
 
                     // set the bearer token to the outgoing request
                     request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
