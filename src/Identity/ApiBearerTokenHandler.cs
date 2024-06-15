@@ -20,7 +20,7 @@ namespace Sufficit.Identity
             _token = token;
         }
 
-        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected override async Task<HttpResponseMessage> SendAsync (HttpRequestMessage request, CancellationToken cancellationToken)
         {
             if (ShouldAuthenticate(request))
             {
