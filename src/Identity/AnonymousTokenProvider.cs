@@ -12,8 +12,6 @@ namespace Sufficit.Identity
     public class AnonymousTokenProvider : ITokenProvider
     {
         public ValueTask<string?> GetTokenAsync()
-        {
-            return new ValueTask<string?>((string?)null);
-        }
+            => new ValueTask<string?>((string?)null);        
     }
 }

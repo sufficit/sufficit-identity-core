@@ -29,7 +29,7 @@ namespace Sufficit.Identity
             Populate(this);
         }
 
-        public UserPrincipal(ClaimsPrincipal principal , AuthenticationUserOptions options)
+        public UserPrincipal (ClaimsPrincipal principal , AuthenticationUserOptions options)
         {
             var identity = new ClaimsIdentity(principal.Claims, options.AuthenticationType, options.NameClaim, string.Empty);
             this.AddIdentity(identity);
@@ -67,9 +67,9 @@ namespace Sufficit.Identity
                 {
                     foreach (var text in DeserializeSingleOrList(claim.Value))
                     {
-                        if (text == "administrator")
+                        if (text == Sufficit.Identity.AdministratorRole.NormalizedName)
                             roles.Add(Guid.Parse(AdministratorRole.UniqueID));
-                        else if (text == "manager")
+                        else if (text == Sufficit.Identity.ManagerRole.NormalizedName)
                             roles.Add(Guid.Parse(ManagerRole.UniqueID));
                     }                    
                 }
