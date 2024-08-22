@@ -7,8 +7,11 @@ namespace Sufficit.Telephony
 {
     public class TelephonyAdminDirective : Directive
     {
-        public const string UniqueID = "09394ab4-8338-4662-a3d5-dd3a75324032";
+        public const string UniqueID = "09394ab4-8338-4662-a3d5-dd3a75324032";        
+
         public const string RoleID = TelephonyAdminRole.UniqueID;
+
+        public const string NormalizedKey = TelephonyAdminRole.NormalizedName;
 
         public override Guid ID => Guid.Parse(UniqueID);
 
@@ -16,6 +19,6 @@ namespace Sufficit.Telephony
 
         public override string Name => "acesso a administração de telefonia";
 
-        public override string Key => "telephonyadmin";
+        public override string Key => NormalizedKey;
     }
 }

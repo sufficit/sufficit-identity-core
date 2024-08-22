@@ -12,6 +12,9 @@ namespace Sufficit.Identity
 
         public virtual Guid IDRole => Guid.Empty;
 
+        /// <summary>
+        ///     Common Title for this directive, Use Culture Variations
+        /// </summary>
         public abstract string Name { get; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull | JsonIgnoreCondition.WhenWritingDefault)]

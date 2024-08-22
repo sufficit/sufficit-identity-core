@@ -11,7 +11,10 @@ namespace Sufficit.Sales
     public class ServiceMonitorDirective : Directive
     {
         public const string UniqueID = "362a9b8f-310c-4531-8103-7cca22a1d2f5";
+
         public const string RoleID = SalesRepresentativeRole.UniqueID;
+
+        public const string NormalizedKey = "servicemonitor";
 
         public override Guid ID => Guid.Parse(UniqueID);
 
@@ -21,6 +24,6 @@ namespace Sufficit.Sales
 
         public override string Description => "Usado para incluir no Grupo de Representantes de vendas.";
 
-        public override string Key => "servicemonitor";
+        public override string Key => NormalizedKey;
     }
 }
