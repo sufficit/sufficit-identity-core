@@ -11,9 +11,9 @@ namespace Sufficit.Telephony
 
         public const string NormalizedName = "telephonymanager";
 
-        public Guid ID => Guid.Parse(UniqueID);
+        public readonly Guid ID => Guid.Parse(UniqueID);
 
-        public string Name => "Telephony Manager";
+        public readonly string Name => "Telephony Manager";
 
         string IRole.NormalizedName => NormalizedName;
 
