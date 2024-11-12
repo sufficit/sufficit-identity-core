@@ -8,13 +8,14 @@ namespace Sufficit.Finance
     public struct FinancialManagerRole : IRole
     {
         public const string UniqueID = "1ef82b4a-532e-4225-b3db-7619c5cd8870";
+        public const string NormalizedName = "financialmanager";
 
-        public Guid ID => Guid.Parse(UniqueID);
+        public readonly Guid ID => Guid.Parse(UniqueID);
 
-        public string Name => "Financial Manager";
+        public readonly string Name => "Financial Manager";
 
-        public string NormalizedName => "financialmanager";
+        readonly string IRole.NormalizedName => NormalizedName;
 
-        string[] IRole.Filter => new string[] { NormalizedName, "gerente financeiro" };
+        readonly string[] IRole.Filter => new string[] { NormalizedName, "gerente financeiro" };
     }
 }
