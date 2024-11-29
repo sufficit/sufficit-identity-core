@@ -51,48 +51,25 @@
 		</None>
 	</ItemGroup>
 
-	<ItemGroup Label="Sufficit Dependencies on Packing" Condition=" '$(Configuration)' == 'Packing' ">
-		<PackageReference Include="Sufficit.Utils" Version="1.*" />
-	</ItemGroup>
+	<PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+		<NoWarn>$(NoWarn);nullable</NoWarn>
+	</PropertyGroup>
 
 	<ItemGroup Label="Sufficit Local Dependencies" Condition=" '$(Configuration)' != 'Packing' ">
 		<ProjectReference Include="..\..\sufficit-utils\src\Sufficit.Utils.csproj" />
 	</ItemGroup>
-	
-	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" version="*" />
-		<PackageReference Include="Microsoft.Extensions.Identity.Stores" version="*" />
-		<PackageReference Include="Microsoft.Extensions.Logging" version="*" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="*" />
-		<PackageReference Include="Microsoft.Extensions.Options" version="*" />
-		<PackageReference Include="System.Text.Json" Version="*" />
-	</ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0' ">
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" version="[*,7.0.0)" />
-		<PackageReference Include="Microsoft.Extensions.Identity.Stores" version="[*,7.0.0)" />
-		<PackageReference Include="Microsoft.Extensions.Logging" version="[*,7.0.0)" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="[*,7.0.0)" />
-		<PackageReference Include="Microsoft.Extensions.Options" version="[*,7.0.0)" />
-		<PackageReference Include="System.Text.Json" Version="[*,7.0.0)" />
-	</ItemGroup>
-
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net7.0' ">
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" version="[*,8.0.0)" />
-		<PackageReference Include="Microsoft.Extensions.Identity.Stores" version="[*,8.0.0)" />
-		<PackageReference Include="Microsoft.Extensions.Logging" version="[*,8.0.0)" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="[*,8.0.0)" />
-		<PackageReference Include="Microsoft.Extensions.Options" version="[*,8.0.0)" />
-		<PackageReference Include="System.Text.Json" Version="[*,8.0.0)" />
-	</ItemGroup>
-
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net8.0' ">
+	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" version="[*,9.0.0)" />
 		<PackageReference Include="Microsoft.Extensions.Identity.Stores" version="[*,9.0.0)" />
 		<PackageReference Include="Microsoft.Extensions.Logging" version="[*,9.0.0)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="[*,9.0.0)" />
 		<PackageReference Include="Microsoft.Extensions.Options" version="[*,9.0.0)" />
 		<PackageReference Include="System.Text.Json" Version="[*,9.0.0)" />
+	</ItemGroup>
+	
+	<ItemGroup Label="Sufficit Dependencies on Packing" Condition=" '$(Configuration)' == 'Packing' ">
+		<PackageReference Include="Sufficit.Utils" Version="1.*" />
 	</ItemGroup>
 
 </Project>
