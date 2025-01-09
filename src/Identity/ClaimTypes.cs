@@ -8,11 +8,18 @@ namespace Sufficit.Identity
     {
         public const string MicrosoftNameIdentifier = System.Security.Claims.ClaimTypes.NameIdentifier;
         public const string MicrosoftRole = System.Security.Claims.ClaimTypes.Role;
+        public const string MicrosoftName = System.Security.Claims.ClaimTypes.Name;
 
         /// <summary>
-        /// Define user roles
+        /// Define user roles (from skoruba identity)
         /// </summary>
         public const string Role = "role";
+
+
+        /// <summary>
+        /// Define user names (from skoruba identity)
+        /// </summary>
+        public const string Name = "name";
 
         /// <summary>
         /// Define user directives policies
@@ -25,8 +32,8 @@ namespace Sufficit.Identity
         public const string UserID = "sub";
 
         /// <summary>
-        /// Define user full name or name representation
+        ///     Default name for access token claim
         /// </summary>
-        public const string UserFullName = System.Security.Claims.ClaimTypes.Name;
+        public const string AccessToken = "access_token";
     }
 }

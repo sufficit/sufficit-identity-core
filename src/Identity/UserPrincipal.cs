@@ -5,7 +5,6 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
 using System.Text.Json;
-using Sufficit.Identity;
 
 namespace Sufficit.Identity
 {
@@ -18,26 +17,22 @@ namespace Sufficit.Identity
 
             Populate(this);
         }
-
-        public UserPrincipal(ClaimsIdentity identity)
+        
+        public UserPrincipal(IIdentity identity) : base(identity)
         {
-            this.AddIdentity(identity);
-
             Policies = new HashSet<UserPolicyBase>();
             Roles = new HashSet<IRole>();
 
             Populate(this);
         }
-
-        public UserPrincipal (ClaimsPrincipal principal , AuthenticationUserOptions options)
+        
+        public UserPrincipal (ClaimsPrincipal principal, AuthenticationUserOptions options)
         {
-            var identity = new ClaimsIdentity(principal.Claims, options.AuthenticationType, options.NameClaim, string.Empty);
-            this.AddIdentity(identity);
-
             Policies = new HashSet<UserPolicyBase>();
             Roles = new HashSet<IRole>();
 
-            Populate(this);
+            var identity = new ClaimsIdentity(principal.Claims, options.AuthenticationType, options.NameClaim, string.Empty);
+            AddIdentity(identity);
         }
 
         public virtual ICollection<UserPolicyBase> Policies { get; }
@@ -63,7 +58,7 @@ namespace Sufficit.Identity
                         }
                     }
                 } 
-                else if(claim.Type == Sufficit.Identity.ClaimTypes.MicrosoftRole || claim.Type == Sufficit.Identity.ClaimTypes.Role)
+                else if (claim.Type == Sufficit.Identity.ClaimTypes.MicrosoftRole || claim.Type == Sufficit.Identity.ClaimTypes.Role)
                 {
                     foreach (var text in DeserializeSingleOrList(claim.Value))
                     {
@@ -75,7 +70,7 @@ namespace Sufficit.Identity
                 }
             }
 
-            if (roles.Any())
+            if (roles.Count > 0)
             {
                 // For compatibility to another systems
                 if (user.Identity is ClaimsIdentity identity)
@@ -115,12 +110,17 @@ namespace Sufficit.Identity
 
         public override bool IsInRole(string role)
         {
-            if (!string.IsNullOrWhiteSpace(role))
-            {
-                string roleToCompare = role.ToLowerInvariant().Trim();
+            string? roleToCompare = role?.ToLowerInvariant().Trim();
+            if (!string.IsNullOrWhiteSpace(roleToCompare))            
                 return Roles.Any(s => s.Filter.Contains(roleToCompare));
-            }
+            
             return false;
+        }
+
+        public override void AddIdentity(ClaimsIdentity identity)
+        {
+            base.AddIdentity(identity);
+            Populate(this);
         }
     }
 }

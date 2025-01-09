@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup Label="Sufficit Targeting">
-		<TargetFrameworks>netstandard2.0;net6.0;net7.0;net8.0</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;net7.0;net8.0;net9.0</TargetFrameworks>
 		<RootNamespace>Sufficit</RootNamespace>
 		<LangVersion>8.0</LangVersion>
 		<RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
@@ -55,11 +55,7 @@
 		<NoWarn>$(NoWarn);nullable</NoWarn>
 	</PropertyGroup>
 
-	<ItemGroup Label="Sufficit Local Dependencies" Condition=" '$(Configuration)' != 'Packing' ">
-		<ProjectReference Include="..\..\sufficit-utils\src\Sufficit.Utils.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net7.0' ">
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" version="[*,9.0.0)" />
 		<PackageReference Include="Microsoft.Extensions.Identity.Stores" version="[*,9.0.0)" />
 		<PackageReference Include="Microsoft.Extensions.Logging" version="[*,9.0.0)" />
@@ -67,9 +63,22 @@
 		<PackageReference Include="Microsoft.Extensions.Options" version="[*,9.0.0)" />
 		<PackageReference Include="System.Text.Json" Version="[*,9.0.0)" />
 	</ItemGroup>
+
+	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'net8.0' Or '$(TargetFramework)' == 'net9.0' ">
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" version="[*,10.0.0)" />
+		<PackageReference Include="Microsoft.Extensions.Identity.Stores" version="[*,10.0.0)" />
+		<PackageReference Include="Microsoft.Extensions.Logging" version="[*,10.0.0)" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="[*,10.0.0)" />
+		<PackageReference Include="Microsoft.Extensions.Options" version="[*,10.0.0)" />
+		<PackageReference Include="System.Text.Json" Version="[*,10.0.0)" />
+	</ItemGroup>	
 	
 	<ItemGroup Label="Sufficit Dependencies on Packing" Condition=" '$(Configuration)' == 'Packing' ">
 		<PackageReference Include="Sufficit.Utils" Version="1.*" />
+	</ItemGroup>
+	
+	<ItemGroup Label="Sufficit Local Dependencies" Condition=" '$(Configuration)' != 'Packing' ">
+		<ProjectReference Include="..\..\sufficit-utils\src\Sufficit.Utils.csproj" />
 	</ItemGroup>
 
 </Project>

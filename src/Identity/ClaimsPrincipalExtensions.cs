@@ -22,5 +22,26 @@ namespace Sufficit.Identity
             }
             return Guid.Empty;
         }
+
+        /// <summary>
+        ///     Get access token
+        /// </summary>
+        public static string? GetAccessToken(this ClaimsPrincipal? source)
+        {            
+            var claims = source.GetClaims();
+            var claim = claims.FirstOrDefault(s => s.Type == ClaimTypes.AccessToken);
+            if (claim != null && !string.IsNullOrWhiteSpace(claim.Value)) 
+                return claim.Value;
+          
+            return null;
+        }
+
+        public static IEnumerable<Claim> GetClaims(this ClaimsPrincipal? source)
+        {
+            if (source != null) 
+                foreach(var identity in source.Identities)            
+                    foreach (var claim in identity.Claims)
+                        yield return claim;
+        }
     }
 }
