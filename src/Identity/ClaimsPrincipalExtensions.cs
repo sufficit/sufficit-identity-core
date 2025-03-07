@@ -9,10 +9,8 @@ namespace Sufficit.Identity
     public static class ClaimsPrincipalExtensions
     {
         /// <summary>
-        /// Get user Guid ID from ClaimTypes.UserID
+        ///     Get user Guid ID from ClaimTypes.UserID
         /// </summary>
-        /// <param name="source"></param>
-        /// <returns></returns>
         public static Guid GetUserId(this ClaimsPrincipal? source)
         {
             if (source != null)
@@ -43,5 +41,12 @@ namespace Sufficit.Identity
                     foreach (var claim in identity.Claims)
                         yield return claim;
         }
+
+
+        /// <summary>
+        ///     Shortcut for Principal.Identity - IsAuthenticated
+        /// </summary>
+        public static bool IsAuthenticated (this ClaimsPrincipal? source)
+            => source?.Identity?.IsAuthenticated ?? false;
     }
 }
