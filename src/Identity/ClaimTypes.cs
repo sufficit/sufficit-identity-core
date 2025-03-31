@@ -6,8 +6,13 @@ namespace Sufficit.Identity
 {
     public static class ClaimTypes
     {
+        /// <inheritdoc cref="System.Security.Claims.ClaimTypes.NameIdentifier"/>
         public const string MicrosoftNameIdentifier = System.Security.Claims.ClaimTypes.NameIdentifier;
+
+        /// <inheritdoc cref="System.Security.Claims.ClaimTypes.Role"/>
         public const string MicrosoftRole = System.Security.Claims.ClaimTypes.Role;
+
+        /// <inheritdoc cref="System.Security.Claims.ClaimTypes.Name"/>
         public const string MicrosoftName = System.Security.Claims.ClaimTypes.Name;
 
         /// <summary>
