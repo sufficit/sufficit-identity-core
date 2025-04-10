@@ -108,11 +108,33 @@ namespace Sufficit.Identity
             }
         }
 
+        public readonly static char[] RoleSeparators = { ',', '|' };
+
+        /// <summary>
+        ///     Check if user is in role, or roles using the <see cref="RoleSeparators"/>
+        /// </summary>
         public override bool IsInRole(string role)
         {
             string? roleToCompare = role?.ToLowerInvariant().Trim();
-            if (!string.IsNullOrWhiteSpace(roleToCompare))            
-                return Roles.Any(s => s.Filter.Contains(roleToCompare));
+            if (!string.IsNullOrWhiteSpace(roleToCompare))
+            {
+                // test for role in the list of roles
+                if (roleToCompare.IndexOfAny(RoleSeparators) != -1)
+                {
+                    var roles = roleToCompare.Split(RoleSeparators, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (var r in roles)
+                    {
+                        if (Roles.Any(s => s.Filter.Contains(r.Trim())))
+                            return true;
+                    }
+                }
+
+                // test for a single role
+                else
+                {
+                    return Roles.Any(s => s.Filter.Contains(roleToCompare));
+                }
+            }
             
             return false;
         }

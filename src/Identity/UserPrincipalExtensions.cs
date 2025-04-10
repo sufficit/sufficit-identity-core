@@ -8,6 +8,8 @@ namespace Sufficit.Identity
 {
     public static class UserPrincipalExtensions
     {
+        #region IS IN ROLE
+
         public static bool IsInRole(this UserPrincipal? source, IRole role) 
             => source?.Roles.Contains(role) ?? false;
 
@@ -30,6 +32,8 @@ namespace Sufficit.Identity
 
         public static bool IsInRole<T, U>(this UserPrincipal? source) where T : IRole 
             => source?.IsInRole(new[] { typeof(T), typeof(U) }) ?? false;
+        
+        #endregion
 
         /// <summary>
         /// Get user Guid ID from ClaimTypes.UserID
