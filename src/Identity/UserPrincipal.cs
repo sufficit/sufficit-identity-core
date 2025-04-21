@@ -39,7 +39,7 @@ namespace Sufficit.Identity
 
         public virtual ICollection<IRole> Roles { get; }
 
-        static void Populate(UserPrincipal user)
+        static void Populate (UserPrincipal user)
         {
             var roles = new HashSet<Guid>();
             foreach (var claim in user.Claims)
@@ -49,7 +49,7 @@ namespace Sufficit.Identity
                     foreach (var text in DeserializeSingleOrList(claim.Value))
                     {
                         var policy = new Claim(ClaimTypes.Directive, text).ToUserPolicy();
-                        if (policy != null && !user.Policies.Contains(policy))
+                        if (!user.Policies.Contains(policy))
                         {
                             user.Policies.Add(policy);
 

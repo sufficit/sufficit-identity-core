@@ -35,7 +35,7 @@ namespace Sufficit.Identity
         public bool Equals(IDirective? other) => this.ID == other?.ID;
 
         public static IEnumerable<IDirective> Enumerator { get; }
-            = Utils.GetCollectionOfType<IDirective>().Where(s => !string.IsNullOrWhiteSpace(s.Key));
+            = Sufficit.Utils.GetCollectionOfType<IDirective>().Where(s => !string.IsNullOrWhiteSpace(s.Key));
 
         #endregion
     }

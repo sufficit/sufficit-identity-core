@@ -25,7 +25,7 @@ namespace Sufficit.Identity
         [DataMember(Name = "idcontext")]
         public Guid IDContext { get; set; }
 
-        public override bool Equals(object? other) =>
+        public override bool Equals (object? other) =>
            other is UserPolicyBase p && p.IDContext == IDContext && p.IDDirective == IDDirective;
 
         public override int GetHashCode() => 

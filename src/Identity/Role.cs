@@ -8,7 +8,7 @@ namespace Sufficit.Identity
     public static class Role
     {        
         public static IEnumerable<IRole> Enumerator { get; }
-            = Utils.GetCollectionOfType<IRole>();
+            = Sufficit.Utils.GetCollectionOfType<IRole>();
 
         public static bool Compare(this IRole source, string? role)
         {

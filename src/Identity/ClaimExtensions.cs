@@ -6,7 +6,14 @@ using System.Linq;
 namespace Sufficit.Identity
 {
     public static class ClaimExtensions
-    {   
+    {
+        /// <summary>
+        /// Create a UserPolicy from (name):(guid) directive claim 
+        /// </summary>
+        /// <param name="claim">must be of type <see cref="ClaimTypes.Directive"/></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="Exception"></exception>
         public static UserPolicy ToUserPolicy(this System.Security.Claims.Claim claim)
         {
             if (claim == null) throw new ArgumentNullException(nameof(claim));
@@ -16,7 +23,7 @@ namespace Sufficit.Identity
             var claimType = claim.Value.Split(':');
             if (claimType.Length != 2) throw new Exception($"invalid claim type: { claim.Value }");
 
-            return UserPolicy.Generate(claimType[0], claimType[1]);
+            return Utils.ToUserPolicy(claimType[0], claimType[1]);
         }
 
         public static UserPolicy ToUserPolicy(this UserClaim claim)
@@ -31,7 +38,7 @@ namespace Sufficit.Identity
             if (claimType.Length != 2) 
                 throw new Exception($"invalid claim type: {claim.ClaimValue}");
 
-            return UserPolicy.Generate(claimType[0], claimType[1]);
+            return Utils.ToUserPolicy(claimType[0], claimType[1]);
         }        
     }
 }
