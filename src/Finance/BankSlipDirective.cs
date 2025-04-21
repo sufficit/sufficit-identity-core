@@ -5,7 +5,11 @@ using System.Text;
 
 namespace Sufficit.Finance
 {
-    public class BankBilletDirective : Directive
+    /// <summary>
+    ///     BankSlip Access (view basic info, pdf link)
+    /// </summary>
+    /// <remarks>*wrong key name in code, change in future</remarks>
+    public class BankSlipDirective : Directive
     {
         public const string UniqueID = "1cea282f-5b36-45d6-85e6-d1ad866d2b27";
         public const string RoleID = FinancialRole.UniqueID;
