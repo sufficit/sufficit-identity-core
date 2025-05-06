@@ -8,12 +8,14 @@ namespace Sufficit.Telephony
     public struct TelephonySupervisorRole : IRole
     {
         public const string UniqueID = "df828011-e0de-4cb6-8481-2abf912115cf";
+        
+        public const string NormalizedName = "telephonysupervisor";
 
-        public Guid ID => Guid.Parse(UniqueID);
+        public readonly Guid ID => Guid.Parse(UniqueID);
 
-        public string Name => "Telephony Supervisor";
+        public readonly string Name => "Telephony Supervisor";
 
-        public string NormalizedName => "telephonysupervisor";
+        string IRole.NormalizedName => NormalizedName;
 
         string[] IRole.Filter => new[] { NormalizedName, "supervisor de telefonia" };
     }

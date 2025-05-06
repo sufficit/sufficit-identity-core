@@ -9,12 +9,14 @@ namespace Sufficit.Provisioning
     {
         public const string UniqueID = "2c5db110-a92e-4757-8655-919d50aa043e";
 
-        public Guid ID => Guid.Parse(UniqueID);
+        public const string NormalizedName = "provisioning";
 
-        public string Name => "Provisioning";
+        public readonly Guid ID => Guid.Parse(UniqueID);
 
-        public string NormalizedName => "provisioning";
+        public readonly string Name => "Provisioning";
 
-        string[] IRole.Filter => new string[] { NormalizedName };
+        readonly string IRole.NormalizedName => NormalizedName;
+
+        readonly string[] IRole.Filter => new string[] { NormalizedName };
     }
 }
