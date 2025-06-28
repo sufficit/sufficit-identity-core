@@ -12,10 +12,8 @@ namespace Sufficit.Identity
     {
         Guid ID { get; }
         Guid IDRole { get; }
-        string Name { get; }
-        
+        string Name { get; }        
         string? Description { get; }
-
         string Key { get; }
     }
 }
