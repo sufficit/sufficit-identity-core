@@ -3,9 +3,6 @@
 	<PropertyGroup Label="Sufficit Targeting">
 		<TargetFrameworks>netstandard2.0;net7.0;net8.0;net9.0</TargetFrameworks>
 		<RootNamespace>Sufficit</RootNamespace>
-		<LangVersion>8.0</LangVersion>
-		<RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
-		<Nullable>enable</Nullable>
 		<Configurations>Debug;Release;Packing</Configurations>
 	</PropertyGroup>
 	
@@ -59,34 +56,55 @@
 		</None>
 	</ItemGroup>
 
-	<PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+	<!-- #region Sufficit Versioning Options V:202508221812 -->
+
+	<PropertyGroup Label="Sufficit Versioning Options" Condition="'$(TargetFramework)' == 'netstandard2.0'">
+		<PkgVersion>[9.*,10.0.0)</PkgVersion>
 		<NoWarn>$(NoWarn);nullable</NoWarn>
+
+		<!-- Set language version per framework to ensure compatibility with generated global usings -->
+		<LangVersion>8.0</LangVersion>
 	</PropertyGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net7.0' ">
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" version="[*,9.0.0)" />
-		<PackageReference Include="Microsoft.Extensions.Identity.Stores" version="[*,9.0.0)" />
-		<PackageReference Include="Microsoft.Extensions.Logging" version="[*,9.0.0)" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="[*,9.0.0)" />
-		<PackageReference Include="Microsoft.Extensions.Options" version="[*,9.0.0)" />
-		<PackageReference Include="System.Text.Json" Version="[*,9.0.0)" />
-	</ItemGroup>
+	<PropertyGroup Label="Sufficit Versioning Options" Condition=" '$(TargetFramework)' == 'net6.0' ">
+		<PkgVersion>[*,7.0.0)</PkgVersion>
+		<LangVersion>10.0</LangVersion>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'net8.0' Or '$(TargetFramework)' == 'net9.0' ">
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" version="[*,10.0.0)" />
-		<PackageReference Include="Microsoft.Extensions.Identity.Stores" version="[*,10.0.0)" />
-		<PackageReference Include="Microsoft.Extensions.Logging" version="[*,10.0.0)" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="[*,10.0.0)" />
-		<PackageReference Include="Microsoft.Extensions.Options" version="[*,10.0.0)" />
-		<PackageReference Include="System.Text.Json" Version="[*,10.0.0)" />
-	</ItemGroup>	
-	
-	<ItemGroup Label="Sufficit Dependencies on Packing" Condition=" '$(Configuration)' == 'Packing' ">
-		<PackageReference Include="Sufficit.Utils" Version="1.*" />
+	<PropertyGroup Label="Sufficit Versioning Options" Condition=" '$(TargetFramework)' == 'net7.0' ">
+		<PkgVersion>[*,8.0.0)</PkgVersion>
+		<LangVersion>10.0</LangVersion>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<PropertyGroup Label="Sufficit Versioning Options" Condition=" '$(TargetFramework)' == 'net8.0' ">
+		<PkgVersion>[8.*,10.0.0)</PkgVersion>
+		<LangVersion>10.0</LangVersion>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<PropertyGroup Label="Sufficit Versioning Options" Condition=" '$(TargetFramework)' == 'net9.0' ">
+		<PkgVersion>[9.*,10.0.0)</PkgVersion>
+		<LangVersion>10.0</LangVersion>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<!-- #endregion -->
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" version="$(PkgVersion)" />
+		<PackageReference Include="Microsoft.Extensions.Identity.Stores" version="$(PkgVersion)" />
+		<PackageReference Include="Microsoft.Extensions.Logging" version="$(PkgVersion)" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="$(PkgVersion)" />
+		<PackageReference Include="Microsoft.Extensions.Options" version="$(PkgVersion)" />
+		<PackageReference Include="System.Text.Json" Version="[8.0.5,9.0.0)" Condition=" '$(TargetFramework)' == 'net6.0' OR '$(TargetFramework)' == 'net7.0' " />
+		<PackageReference Include="System.Text.Json" Version="$(PkgVersion)" Condition=" '$(TargetFramework)' == 'net8.0' OR '$(TargetFramework)' == 'net9.0' OR '$(TargetFramework)' == 'netstandard2.0' " />
 	</ItemGroup>
 	
-	<ItemGroup Label="Sufficit Local Dependencies" Condition=" '$(Configuration)' != 'Packing' ">
-		<ProjectReference Include="..\..\sufficit-utils\src\Sufficit.Utils.csproj" />
+	<ItemGroup Label="Sufficit Dependencies">
+		<ProjectReference Include="..\..\sufficit-utils\src\Sufficit.Utils.csproj" Condition="Exists('..\\..\\sufficit-utils\\src\\Sufficit.Utils.csproj')" />
+		<PackageReference Include="Sufficit.Utils" Version="1.*" Condition="!Exists('..\\..\\sufficit-utils\\src\\Sufficit.Utils.csproj') " />
 	</ItemGroup>
 
 </Project>
