@@ -32,7 +32,7 @@ namespace Sufficit.Identity
 
         public static bool IsInRole<T, U>(this UserPrincipal? source) where T : IRole 
             => source?.IsInRole(new[] { typeof(T), typeof(U) }) ?? false;
-        
+
         #endregion
 
         /// <summary>
@@ -41,5 +41,11 @@ namespace Sufficit.Identity
         /// <returns></returns>
         public static Guid GetUserId(this UserPrincipal? source)
             => source is ClaimsPrincipal principal ? principal.GetUserId() : Guid.Empty;
+            
+        public static IEnumerable<IRole> GetRoles(this UserPrincipal? principal)
+        {
+            if (principal == null) return Enumerable.Empty<IRole>();
+            return principal.Roles;
+        }
     }
 }

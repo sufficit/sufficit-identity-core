@@ -39,7 +39,7 @@ namespace Sufficit.Identity
 
         public virtual ICollection<IRole> Roles { get; }
 
-        static void Populate (UserPrincipal user)
+        static void Populate(UserPrincipal user)
         {
             var roles = new HashSet<Guid>();
             foreach (var claim in user.Claims)
@@ -57,7 +57,7 @@ namespace Sufficit.Identity
                                 roles.Add(policy.Directive.IDRole);
                         }
                     }
-                } 
+                }
                 else if (claim.Type == Sufficit.Identity.ClaimTypes.MicrosoftRole || claim.Type == Sufficit.Identity.ClaimTypes.Role)
                 {
                     foreach (var text in DeserializeSingleOrList(claim.Value))
@@ -66,7 +66,7 @@ namespace Sufficit.Identity
                             roles.Add(Guid.Parse(AdministratorRole.UniqueID));
                         else if (text == Sufficit.Identity.ManagerRole.NormalizedName)
                             roles.Add(Guid.Parse(ManagerRole.UniqueID));
-                    }                    
+                    }
                 }
             }
 
@@ -95,7 +95,7 @@ namespace Sufficit.Identity
                 }
             }
         }
-
+        
         public static IEnumerable<string> DeserializeSingleOrList(string jsonText)
         {
             if (!jsonText.StartsWith("["))

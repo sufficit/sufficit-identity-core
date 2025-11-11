@@ -123,7 +123,7 @@ namespace Sufficit.Identity
             }
             return contexts;
         }
-        
+
         /// <summary>
         /// Check if the principal knows about a specific context
         /// This is useful to determine if the user has any policies related to the context
@@ -133,5 +133,16 @@ namespace Sufficit.Identity
         /// <returns></returns>
         public static bool IsKnowingContext(this ClaimsPrincipal principal, Guid contextId)
             => principal.KnowingContexts().Contains(contextId);
+            
+        public static IEnumerable<Claim> GetRoles(this ClaimsPrincipal? principal)
+        {
+            var roles = new HashSet<Claim>();
+            if (principal == null) return roles;
+
+            foreach (var claim in principal.Claims.Where(s => s.Type == ClaimTypes.Role || s.Type == ClaimTypes.MicrosoftRole))            
+                roles.Add(claim);
+            
+            return roles.GroupBy(s => s.Value).Select(g => g.First());
+        }
     }
 }
