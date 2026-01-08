@@ -37,3 +37,6 @@
         // implementation
     }
 #endregion
+
+## .NET Framework Guidelines
+* **net6.0 Support**: Maintain net6.0 target framework support for compatibility with identity-related dependencies and authentication systems.
