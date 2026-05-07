@@ -7,10 +7,12 @@ namespace Sufficit.Identity
     {
         public const string UniqueID = "96910621-7b5c-40cd-af9a-0da4b78fe6f4";
 
+        public const string NormalizedKey = "policyupdate";
+        
         public override Guid ID => Guid.Parse(UniqueID);
 
         public override string Name => "atualizar/limpar regras";
 
-        public override string Key => "policyupdate";
+        public override string Key => NormalizedKey;
     }
 }

@@ -17,7 +17,7 @@ namespace Sufficit.Exchange
 
         public override Guid IDRole => Guid.Parse(RoleID);
 
-        public override string Name => "acesso a administração de exchange";
+        public override string Name => "acesso a gerencia de exchange";
 
         public override string Key => NormalizedKey;
     }
