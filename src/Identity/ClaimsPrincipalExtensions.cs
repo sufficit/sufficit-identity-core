@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 
 namespace Sufficit.Identity
 {
@@ -100,20 +101,48 @@ namespace Sufficit.Identity
         }
 
         /// <summary>
-        /// User contexts that requested directives exists
+        /// User contexts that requested directives exists.
+        /// Handles both individual directive claims and JSON-array encoded claims
+        /// (where the identity provider packs multiple directives into a single claim value).
         /// </summary>
         public static IEnumerable<UserPolicy> GetUserPolicies(this ClaimsPrincipal principal)
         {
             foreach (var claim in principal.Claims.Where(s => s.Type == ClaimTypes.Directive))
             {
-                // Skip claims whose value is a JSON array (identity provider encoding all directives
-                // as a single claim) or any other malformed value; they cannot be parsed as a single policy.
                 if (string.IsNullOrWhiteSpace(claim.Value)) continue;
-                var trimmed = claim.Value.TrimStart();
-                if (trimmed.StartsWith("[") || trimmed.StartsWith("{")) continue;
-                if (!claim.Value.Contains(':')) continue;
 
-                yield return claim.ToUserPolicy();
+                var trimmed = claim.Value.TrimStart();
+
+                // JSON array: identity provider encoded multiple directives as a single claim
+                if (trimmed.StartsWith("["))
+                {
+                    IEnumerable<string> entries = null;
+                    try { entries = JsonSerializer.Deserialize<IEnumerable<string>>(trimmed); }
+                    catch { /* malformed JSON — skip */ }
+
+                    if (entries == null) continue;
+                    foreach (var entry in entries)
+                    {
+                        if (string.IsNullOrWhiteSpace(entry)) continue;
+                        if (!entry.Contains(':')) continue;
+                        var arrayClaim = new Claim(claim.Type, entry, claim.ValueType, claim.Issuer);
+                        bool ok = false;
+                        UserPolicy parsed = default;
+                        try { parsed = arrayClaim.ToUserPolicy(); ok = true; } catch { }
+                        if (ok) yield return parsed;
+                    }
+                    continue;
+                }
+
+                // Plain object or other JSON — skip
+                if (trimmed.StartsWith("{")) continue;
+
+                // Plain scalar directive value
+                if (!claim.Value.Contains(':')) continue;
+                bool scalarOk = false;
+                UserPolicy scalarPolicy = default;
+                try { scalarPolicy = claim.ToUserPolicy(); scalarOk = true; } catch { }
+                if (scalarOk) yield return scalarPolicy;
             }
         }
 
