@@ -114,7 +114,11 @@ namespace Sufficit.Identity
                 var trimmed = claim.Value.TrimStart();
 
                 // JSON array: identity provider encoded multiple directives as a single claim
+#if NETSTANDARD2_0
                 if (trimmed.StartsWith("["))
+#else
+                if (trimmed.StartsWith('['))
+#endif
                 {
                     IEnumerable<string> entries = System.Array.Empty<string>();
                     try
@@ -136,7 +140,11 @@ namespace Sufficit.Identity
                 }
 
                 // Plain object or other JSON — skip
+#if NETSTANDARD2_0
                 if (trimmed.StartsWith("{")) continue;
+#else
+                if (trimmed.StartsWith('{')) continue;
+#endif
 
                 // Plain scalar directive value
                 if (!claim.Value.Contains(':')) continue;
