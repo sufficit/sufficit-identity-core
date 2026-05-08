@@ -105,7 +105,16 @@ namespace Sufficit.Identity
         public static IEnumerable<UserPolicy> GetUserPolicies(this ClaimsPrincipal principal)
         {
             foreach (var claim in principal.Claims.Where(s => s.Type == ClaimTypes.Directive))
+            {
+                // Skip claims whose value is a JSON array (identity provider encoding all directives
+                // as a single claim) or any other malformed value; they cannot be parsed as a single policy.
+                if (string.IsNullOrWhiteSpace(claim.Value)) continue;
+                var trimmed = claim.Value.TrimStart();
+                if (trimmed.StartsWith("[") || trimmed.StartsWith("{")) continue;
+                if (!claim.Value.Contains(':')) continue;
+
                 yield return claim.ToUserPolicy();
+            }
         }
 
         /// <summary>
