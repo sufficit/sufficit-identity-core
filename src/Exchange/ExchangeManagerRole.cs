@@ -7,7 +7,7 @@ namespace Sufficit.Exchange
 {
     public struct ExchangeManagerRole : IRole
     {
-        public const string UniqueID = "1b34b49b-e5f5-5c75-a9gb-0dc7b5bbb72g";
+        public const string UniqueID = "1b34b49b-e5f5-5c75-a9ab-0dc7b5bbb72a";
 
         public const string NormalizedName = "exchangemanager";
 

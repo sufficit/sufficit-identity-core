@@ -7,7 +7,7 @@ namespace Sufficit.Exchange
 {
     public class ExchangeManagerDirective : Directive
     {
-        public const string UniqueID = "2c45c5ac-f6g6-6d86-bahc-1ed8c6ccc83h";
+        public const string UniqueID = "2c45c5ac-f6a6-6d86-babc-1ed8c6ccc83b";
 
         public const string RoleID = ExchangeManagerRole.UniqueID;
 
