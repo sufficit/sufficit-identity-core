@@ -116,20 +116,21 @@ namespace Sufficit.Identity
                 // JSON array: identity provider encoded multiple directives as a single claim
                 if (trimmed.StartsWith("["))
                 {
-                    IEnumerable<string> entries = null;
-                    try { entries = JsonSerializer.Deserialize<IEnumerable<string>>(trimmed); }
+                    IEnumerable<string> entries = System.Array.Empty<string>();
+                    try
+                    {
+                        var deserialized = JsonSerializer.Deserialize<IEnumerable<string>>(trimmed);
+                        if (deserialized != null) entries = deserialized;
+                    }
                     catch { /* malformed JSON — skip */ }
 
-                    if (entries == null) continue;
                     foreach (var entry in entries)
                     {
                         if (string.IsNullOrWhiteSpace(entry)) continue;
                         if (!entry.Contains(':')) continue;
                         var arrayClaim = new Claim(claim.Type, entry, claim.ValueType, claim.Issuer);
-                        bool ok = false;
-                        UserPolicy parsed = default;
-                        try { parsed = arrayClaim.ToUserPolicy(); ok = true; } catch { }
-                        if (ok) yield return parsed;
+                        var parsed = TryParseUserPolicy(arrayClaim);
+                        if (parsed != null) yield return parsed;
                     }
                     continue;
                 }
@@ -139,11 +140,19 @@ namespace Sufficit.Identity
 
                 // Plain scalar directive value
                 if (!claim.Value.Contains(':')) continue;
-                bool scalarOk = false;
-                UserPolicy scalarPolicy = default;
-                try { scalarPolicy = claim.ToUserPolicy(); scalarOk = true; } catch { }
-                if (scalarOk) yield return scalarPolicy;
+                var policy = TryParseUserPolicy(claim);
+                if (policy != null) yield return policy;
             }
+        }
+
+        private static
+#nullable enable
+            UserPolicy?
+#nullable restore
+            TryParseUserPolicy(Claim claim)
+        {
+            try { return claim.ToUserPolicy(); }
+            catch { return null; }
         }
 
         /// <summary>
