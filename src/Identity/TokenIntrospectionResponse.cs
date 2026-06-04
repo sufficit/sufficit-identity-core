@@ -63,10 +63,26 @@ namespace Sufficit.Identity
         public string? Subject { get; set; }
 
         /// <summary>
-        /// Service-specific string identifier or list of string identifiers representing the intended audience
+        /// Service-specific string identifier or list of string identifiers representing the intended audience.
+        ///
+        /// The real introspection payload from Sufficit Identity can emit <c>aud</c> either as a single string
+        /// or as an array when the same reference token is valid for more than one resource. We store the raw
+        /// contract as an array so token validation UIs and downstream callers keep working in both cases.
         /// </summary>
         [JsonPropertyName("aud")]
-        public string? Audience { get; set; }
+        [JsonConverter(typeof(StringOrStringArrayJsonConverter))]
+        public string[] Audiences { get; set; } = Array.Empty<string>();
+
+        /// <summary>
+        /// Backward-compatible shortcut for legacy callers that still expect a single audience string.
+        /// When multiple audiences exist, the first one is the canonical primary resource.
+        /// </summary>
+        [JsonIgnore]
+        public string? Audience
+        {
+            get => Audiences.Length > 0 ? Audiences[0] : null;
+            set => Audiences = string.IsNullOrWhiteSpace(value) ? Array.Empty<string>() : new[] { value };
+        }
 
         /// <summary>
         /// String representing the issuer of this token
