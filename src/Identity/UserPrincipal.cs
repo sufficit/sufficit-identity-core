@@ -75,8 +75,14 @@ namespace Sufficit.Identity
                 // For compatibility to another systems
                 if (user.Identity is ClaimsIdentity identity)
                 {
-                    // avoid enumerate multiple times
-                    var claims = identity.Claims.ToList();
+                    // Flatten role claims first: OpenID Connect providers may emit a
+                    // single role value or a JSON array. Comparing only the raw
+                    // claim value would append another role claim for array input.
+                    var existingRoleValues = new HashSet<string>(
+                        identity.Claims
+                            .Where(s => s.Type == ClaimTypes.Role || s.Type == ClaimTypes.MicrosoftRole)
+                            .SelectMany(s => DeserializeSingleOrList(s.Value)),
+                        StringComparer.OrdinalIgnoreCase);
 
                     foreach (var roleid in roles)
                     {
@@ -85,7 +91,11 @@ namespace Sufficit.Identity
                         {
                             user.Roles.Add(role);
 
-                            if (!claims.Any(s => s.Type == ClaimTypes.Role && s.Value == role.NormalizedName))
+                            // Tokens can carry roles using either the OpenID Connect
+                            // short type ("role") or the Microsoft URI type. Treat
+                            // both representations as the same claim so rebuilding
+                            // the principal never appends a second copy.
+                            if (existingRoleValues.Add(role.NormalizedName))
                             {
                                 var newClaim = new Claim(Sufficit.Identity.ClaimTypes.Role, role.NormalizedName);
                                 identity.AddClaim(newClaim);
