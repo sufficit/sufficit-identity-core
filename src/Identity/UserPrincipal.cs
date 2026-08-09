@@ -42,23 +42,26 @@ namespace Sufficit.Identity
         static void Populate(UserPrincipal user)
         {
             var roles = new HashSet<Guid>();
+
+            // Directive claims are an extensible contract shared by several
+            // products. A service running an older Identity.Core must ignore a
+            // directive it does not understand instead of rejecting the whole
+            // access token. GetUserPolicies already applies that fail-closed
+            // behavior: malformed or unknown directives grant no policy.
+            foreach (var policy in user.GetUserPolicies())
+            {
+                if (!user.Policies.Contains(policy))
+                {
+                    user.Policies.Add(policy);
+
+                    if (policy.Directive.IDRole != Guid.Empty)
+                        roles.Add(policy.Directive.IDRole);
+                }
+            }
+
             foreach (var claim in user.Claims)
             {
-                if (claim.Type == ClaimTypes.Directive)
-                {
-                    foreach (var text in DeserializeSingleOrList(claim.Value))
-                    {
-                        var policy = new Claim(ClaimTypes.Directive, text).ToUserPolicy();
-                        if (!user.Policies.Contains(policy))
-                        {
-                            user.Policies.Add(policy);
-
-                            if (policy.Directive.IDRole != Guid.Empty)
-                                roles.Add(policy.Directive.IDRole);
-                        }
-                    }
-                }
-                else if (claim.Type == Sufficit.Identity.ClaimTypes.MicrosoftRole || claim.Type == Sufficit.Identity.ClaimTypes.Role)
+                if (claim.Type == Sufficit.Identity.ClaimTypes.MicrosoftRole || claim.Type == Sufficit.Identity.ClaimTypes.Role)
                 {
                     foreach (var text in DeserializeSingleOrList(claim.Value))
                     {
