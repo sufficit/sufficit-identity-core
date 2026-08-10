@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -106,6 +107,13 @@ namespace Sufficit.Identity
         /// (where the identity provider packs multiple directives into a single claim value).
         /// </summary>
         public static IEnumerable<UserPolicy> GetUserPolicies(this ClaimsPrincipal principal)
+            => GetUserPolicies(principal, null);
+
+        /// <summary>
+        /// User contexts that requested directives exists, logging and ignoring malformed
+        /// or unknown directive claims so one product-specific claim cannot reject the user.
+        /// </summary>
+        public static IEnumerable<UserPolicy> GetUserPolicies(this ClaimsPrincipal principal, ILogger? logger)
         {
             foreach (var claim in principal.Claims.Where(s => s.Type == ClaimTypes.Directive))
             {
@@ -126,14 +134,17 @@ namespace Sufficit.Identity
                         var deserialized = JsonSerializer.Deserialize<IEnumerable<string>>(trimmed);
                         if (deserialized != null) entries = deserialized;
                     }
-                    catch { /* malformed JSON — skip */ }
+                    catch (Exception ex)
+                    {
+                        LogDirectiveWarning(logger, claim.Value, ex.GetType().Name);
+                    }
 
                     foreach (var entry in entries)
                     {
                         if (string.IsNullOrWhiteSpace(entry)) continue;
                         if (!entry.Contains(':')) continue;
                         var arrayClaim = new Claim(claim.Type, entry, claim.ValueType, claim.Issuer);
-                        var parsed = TryParseUserPolicy(arrayClaim);
+                        var parsed = TryParseUserPolicy(arrayClaim, logger);
                         if (parsed != null) yield return parsed;
                     }
                     continue;
@@ -148,7 +159,7 @@ namespace Sufficit.Identity
 
                 // Plain scalar directive value
                 if (!claim.Value.Contains(':')) continue;
-                var policy = TryParseUserPolicy(claim);
+                var policy = TryParseUserPolicy(claim, logger);
                 if (policy != null) yield return policy;
             }
         }
@@ -157,10 +168,60 @@ namespace Sufficit.Identity
 #nullable enable
             UserPolicy?
 #nullable restore
-            TryParseUserPolicy(Claim claim)
+            TryParseUserPolicy(Claim claim, ILogger? logger)
         {
             try { return claim.ToUserPolicy(); }
-            catch { return null; }
+            catch (Exception ex)
+            {
+                LogDirectiveWarning(logger, claim.Value, GetFailureReason(ex));
+                return null;
+            }
+        }
+
+        private static string GetFailureReason(Exception exception)
+        {
+            if (exception is ArgumentException argumentException)
+            {
+                if (argumentException.ParamName == "key") return "UnknownDirective";
+                if (argumentException.ParamName == "context") return "InvalidContext";
+            }
+
+            return exception.GetType().Name;
+        }
+
+        private static void LogDirectiveWarning(ILogger? logger, string value, string reason)
+        {
+            if (logger == null) return;
+
+            logger.LogWarning(
+                "Ignoring invalid or unknown directive claim. DirectiveKey={DirectiveKey} Reason={Reason}",
+                GetDirectiveKeyForLog(value),
+                reason);
+        }
+
+        private static string GetDirectiveKeyForLog(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value)) return "<empty>";
+
+            var trimmed = value.TrimStart();
+#if NETSTANDARD2_0
+            if (trimmed.StartsWith("[")) return "<json-array>";
+            if (trimmed.StartsWith("{")) return "<json-object>";
+#else
+            if (trimmed.StartsWith('[')) return "<json-array>";
+            if (trimmed.StartsWith('{')) return "<json-object>";
+#endif
+
+            var separatorIndex = value.IndexOf(':');
+            var key = (separatorIndex > 0 ? value.Substring(0, separatorIndex) : value).Trim();
+            if (key.Length == 0) return "<empty>";
+
+            return new string(key
+                .Take(64)
+                .Select(character => char.IsLetterOrDigit(character) || character == '-' || character == '_' || character == '.'
+                    ? character
+                    : '_')
+                .ToArray());
         }
 
         /// <summary>

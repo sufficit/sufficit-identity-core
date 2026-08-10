@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -10,24 +11,42 @@ namespace Sufficit.Identity
 {
     public class UserPrincipal : System.Security.Claims.ClaimsPrincipal, IPrincipal
     {
-        public UserPrincipal(IPrincipal principal) : base(principal)
+        private readonly ILogger? _logger;
+
+        public UserPrincipal(IPrincipal principal) : this(principal, null)
         {
+        }
+
+        public UserPrincipal(IPrincipal principal, ILogger? logger) : base(principal)
+        {
+            _logger = logger;
             Policies = new HashSet<UserPolicyBase>();
             Roles = new HashSet<IRole>();
 
-            Populate(this);
+            Populate(this, _logger);
         }
-        
-        public UserPrincipal(IIdentity identity) : base(identity)
+
+        public UserPrincipal(IIdentity identity) : this(identity, null)
         {
+        }
+
+        public UserPrincipal(IIdentity identity, ILogger? logger) : base(identity)
+        {
+            _logger = logger;
             Policies = new HashSet<UserPolicyBase>();
             Roles = new HashSet<IRole>();
 
-            Populate(this);
+            Populate(this, _logger);
         }
-        
-        public UserPrincipal (ClaimsPrincipal principal, AuthenticationUserOptions options)
+
+        public UserPrincipal(ClaimsPrincipal principal, AuthenticationUserOptions options)
+            : this(principal, options, null)
         {
+        }
+
+        public UserPrincipal(ClaimsPrincipal principal, AuthenticationUserOptions options, ILogger? logger)
+        {
+            _logger = logger;
             Policies = new HashSet<UserPolicyBase>();
             Roles = new HashSet<IRole>();
 
@@ -39,7 +58,7 @@ namespace Sufficit.Identity
 
         public virtual ICollection<IRole> Roles { get; }
 
-        static void Populate(UserPrincipal user)
+        static void Populate(UserPrincipal user, ILogger? logger)
         {
             var roles = new HashSet<Guid>();
 
@@ -48,7 +67,7 @@ namespace Sufficit.Identity
             // directive it does not understand instead of rejecting the whole
             // access token. GetUserPolicies already applies that fail-closed
             // behavior: malformed or unknown directives grant no policy.
-            foreach (var policy in user.GetUserPolicies())
+            foreach (var policy in user.GetUserPolicies(logger))
             {
                 if (!user.Policies.Contains(policy))
                 {
@@ -155,7 +174,7 @@ namespace Sufficit.Identity
         public override void AddIdentity(ClaimsIdentity identity)
         {
             base.AddIdentity(identity);
-            Populate(this);
+            Populate(this, _logger);
         }
     }
 }
