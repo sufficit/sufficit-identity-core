@@ -51,13 +51,14 @@ namespace Sufficit.Identity
             => source?.Identity?.IsAuthenticated ?? false;
             
         /// <summary>
-        ///     Empty ContextId means that user has rights on all contexts ids
+        ///     Empty ContextId means that user has rights on all contexts ids, except for
+        ///     self-context directives, where it means the authenticated user's own context.
         /// </summary>
         public static bool HasPolicy<T>(this ClaimsPrincipal principal, Guid contextid) where T : IDirective
         {
             foreach (var userDirective in GetUserPolicies(principal))
             {
-                if (userDirective.Directive is T && (userDirective.IDContext == contextid || userDirective.IDContext == Guid.Empty))
+                if (userDirective.Directive is T && MatchesContext(principal, userDirective, contextid))
                     return true;
             }
             return false;
@@ -72,17 +73,20 @@ namespace Sufficit.Identity
             => principal.HasDirective(new T()).Any(s => s == context);
 
         /// <summary>
-        ///     Empty ContextId means that user has rights on all contexts ids
+        ///     Returns effective contexts. For self-context directives, an empty stored
+        ///     context is resolved to the authenticated user's own ID.
         /// </summary>
         public static IEnumerable<Guid> HasDirective(this ClaimsPrincipal principal, IDirective directive)
         {
             var items = new HashSet<Guid>();
             foreach (var userDirective in GetUserPolicies(principal))
             {
-                // old method does not brings empty contexts ??? dont known why its was removed
-                // if (userDirective.Directive.Equals(directive) && userDirective.IDContext != Guid.Empty)
                 if (userDirective.Directive.Equals(directive))
-                    items.Add(userDirective.IDContext);
+                {
+                    var context = GetEffectiveContext(principal, userDirective);
+                    if (context.HasValue)
+                        items.Add(context.Value);
+                }
             }
             return items;
         }
@@ -95,7 +99,8 @@ namespace Sufficit.Identity
         {
             foreach (var userDirective in GetUserPolicies(principal))
             {
-                if (userDirective.Directive.Equals(directive))
+                if (userDirective.Directive.Equals(directive) &&
+                    GetEffectiveContext(principal, userDirective).HasValue)
                     return true;
             }
             return false;
@@ -232,12 +237,37 @@ namespace Sufficit.Identity
         public static IEnumerable<Guid> KnowingContexts(this ClaimsPrincipal principal)
         {
             HashSet<Guid> contexts = new HashSet<Guid>();
-            foreach (var contextId in principal.GetUserPolicies().Select(s => s.IDContext))
+            foreach (var policy in principal.GetUserPolicies())
             {
-                if (contextId != Guid.Empty)
-                    contexts.Add(contextId);
+                var contextId = GetEffectiveContext(principal, policy);
+                if (contextId.HasValue && contextId.Value != Guid.Empty)
+                    contexts.Add(contextId.Value);
             }
             return contexts;
+        }
+
+        private static bool MatchesContext(ClaimsPrincipal principal, UserPolicy policy, Guid contextId)
+        {
+            if (policy.IDContext != Guid.Empty)
+                return policy.IDContext == contextId;
+
+            if (policy.Directive is not ISelfContextDirective)
+                return true;
+
+            var userId = principal.GetUserId();
+            return userId != Guid.Empty && userId == contextId;
+        }
+
+        private static Guid? GetEffectiveContext(ClaimsPrincipal principal, UserPolicy policy)
+        {
+            if (policy.IDContext != Guid.Empty)
+                return policy.IDContext;
+
+            if (policy.Directive is not ISelfContextDirective)
+                return Guid.Empty;
+
+            var userId = principal.GetUserId();
+            return userId != Guid.Empty ? userId : (Guid?)null;
         }
 
         /// <summary>
