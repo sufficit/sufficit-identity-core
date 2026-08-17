@@ -9,14 +9,14 @@ namespace Sufficit.AI
     /// </summary>
     /// <remarks>
     /// Context semantics: the IDContext on assignment should be the customer/company context
-    /// the user belongs to. Use IDContext = Guid.Empty to grant access across all contexts.
+    /// the user belongs to. An empty IDContext is resolved to the authenticated user's own ID.
     /// Verification: use HasPolicy(principal, new AIUserDirective()) to check possession
     /// on any context (typical case), or HasPolicy&lt;AIUserDirective&gt;(principal, contextId)
     /// to scope the check to a specific customer context.
     /// This directive governs consumption only. For module administration (providers, presets,
     /// configuration), see AIControlDirective.
     /// </remarks>
-    public class AIUserDirective : Directive
+    public class AIUserDirective : Directive, ISelfContextDirective
     {
         public const string UniqueID = "12aca70d-1b97-4b4c-9029-5d0eb7db3260";
 
