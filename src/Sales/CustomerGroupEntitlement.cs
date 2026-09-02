@@ -7,7 +7,7 @@ namespace Sufficit.Sales
 {
     public class CustomerGroupEntitlement : Entitlement
     {
-        public const string UniqueID = "77263022-11cb-4299-83fa-2496276e2f93";
+        public const string UniqueID = "7726302211cb429983fa2496276e2f93";
 
         public const string RoleID = SalesRepresentativeRole.UniqueID;
 

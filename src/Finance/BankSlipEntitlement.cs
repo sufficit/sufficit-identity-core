@@ -11,7 +11,7 @@ namespace Sufficit.Finance
     /// <remarks>*wrong key name in code, change in future</remarks>
     public class BankSlipEntitlement : Entitlement
     {
-        public const string UniqueID = "1cea282f-5b36-45d6-85e6-d1ad866d2b27";
+        public const string UniqueID = "1cea282f5b3645d685e6d1ad866d2b27";
         public const string RoleID = FinancialRole.UniqueID;
 
         public override Guid ID => Guid.Parse(UniqueID);

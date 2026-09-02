@@ -1,4 +1,4 @@
-﻿using Sufficit.Identity;
+using Sufficit.Identity;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,7 +7,7 @@ namespace Sufficit.Telephony
 {
     public struct TelephonyManagerRole : IRole
     {
-        public const string UniqueID = "e9099691-e1c7-498a-b3d6-364d01582176";
+        public const string UniqueID = "e9099691e1c7498ab3d6364d01582176";
 
         public const string NormalizedName = "telephonymanager";
 

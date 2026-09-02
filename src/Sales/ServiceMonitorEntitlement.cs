@@ -10,7 +10,7 @@ namespace Sufficit.Sales
     /// </summary>
     public class ServiceMonitorEntitlement : Entitlement
     {
-        public const string UniqueID = "362a9b8f-310c-4531-8103-7cca22a1d2f5";
+        public const string UniqueID = "362a9b8f310c453181037cca22a1d2f5";
 
         public const string RoleID = SalesRepresentativeRole.UniqueID;
 

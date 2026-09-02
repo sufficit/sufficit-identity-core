@@ -7,7 +7,7 @@ namespace Sufficit.Finance
 {
     public class ExpenseViewEntitlement : Entitlement
     {
-        public const string UniqueID = "606a6636-8577-417a-a027-d6f4a8ed00ea";
+        public const string UniqueID = "606a66368577417aa027d6f4a8ed00ea";
         public const string RoleID = FinancialRole.UniqueID;
 
         public override Guid ID => Guid.Parse(UniqueID);

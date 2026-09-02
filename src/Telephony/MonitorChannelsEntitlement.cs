@@ -5,7 +5,7 @@ namespace Sufficit.Telephony
 {
     public class MonitorChannelsEntitlement : Entitlement
     {
-        public const string UniqueID = "7bc67d43-cb9a-46d9-a9eb-cc05561e0618";
+        public const string UniqueID = "7bc67d43cb9a46d9a9ebcc05561e0618";
         public const string RoleID = TelephonySupervisorRole.UniqueID;
 
         public override Guid ID => Guid.Parse(UniqueID);

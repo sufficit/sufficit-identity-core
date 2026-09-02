@@ -10,7 +10,7 @@ namespace Sufficit.Telephony
     /// </summary>
     public class TelephonyClientEntitlement : Entitlement
     {
-        public const string UniqueID = "825e32b4-40d4-4f19-833c-7663bb9c26f7";
+        public const string UniqueID = "825e32b440d44f19833c7663bb9c26f7";
 
         public const string RoleID = TelephonyRole.UniqueID;
 

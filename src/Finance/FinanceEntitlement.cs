@@ -12,7 +12,7 @@ namespace Sufficit.Finance
     /// operations.</remarks>
     public class FinanceEntitlement : Entitlement
     {
-        public const string UniqueID = "20b48f3b-d839-4007-bde4-38151740c6a9";
+        public const string UniqueID = "20b48f3bd8394007bde438151740c6a9";
 
         public override Guid ID => Guid.Parse(UniqueID);
 

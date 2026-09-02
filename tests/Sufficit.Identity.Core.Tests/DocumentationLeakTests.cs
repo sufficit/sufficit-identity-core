@@ -72,7 +72,7 @@ public sealed class DocumentationLeakTests
         {
             foreach (Match match in Guids().Matches(File.ReadAllText(source)))
             {
-                published.Add(match.Value);
+                published.Add(Canonical(match.Value));
             }
         }
 
@@ -81,15 +81,16 @@ public sealed class DocumentationLeakTests
         {
             foreach (Match match in Guids().Matches(File.ReadAllText(file)))
             {
-                var value = match.Value;
+                var value = Canonical(match.Value);
                 if (published.Contains(value)
-                    || ExampleIdentifiers.Contains(value, StringComparer.OrdinalIgnoreCase))
+                    || ExampleIdentifiers.Select(Canonical)
+                        .Contains(value, StringComparer.OrdinalIgnoreCase))
                 {
                     continue;
                 }
 
                 offenders.Add(
-                    $"{Path.GetFileName(file)}: identifier {value} is neither an "
+                    $"{Path.GetFileName(file)}: identifier {match.Value} is neither an "
                     + "example nor a published constant — if it is real, it names a "
                     + "customer.");
             }
@@ -107,9 +108,23 @@ public sealed class DocumentationLeakTests
         }
     }
 
+    /// <summary>
+    ///     Matches both spellings of an identifier.
+    /// </summary>
+    /// <remarks>
+    ///     Recognising only the hyphenated form would let the compact one through
+    ///     unchecked — the same value, a different spelling, and the guard blind to
+    ///     half of it. That is the exact hazard the entitlement documentation warns
+    ///     about, and it applies here too.
+    /// </remarks>
     private static Regex Guids() => new(
-        @"\b[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\b",
+        @"\b(?:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
+        + @"|[0-9a-fA-F]{32})\b",
         RegexOptions.Compiled);
+
+    /// <summary>Both spellings normalise to the same key before comparison.</summary>
+    private static string Canonical(string identifier) =>
+        Guid.TryParse(identifier, out var parsed) ? parsed.ToString("N") : identifier;
 
     private static IEnumerable<string> Documents()
     {

@@ -5,7 +5,7 @@ namespace Sufficit.Telephony
 {
     public class PhoneCallsEntitlement : Entitlement
     {
-        public const string UniqueID = "cf3c66ab-db24-48b6-8c28-4603540286de";
+        public const string UniqueID = "cf3c66abdb2448b68c284603540286de";
         public const string RoleID = TelephonyRole.UniqueID;
 
         public override Guid ID => Guid.Parse(UniqueID);

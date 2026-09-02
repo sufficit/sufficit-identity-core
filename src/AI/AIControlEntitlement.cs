@@ -16,7 +16,7 @@ namespace Sufficit.AI
     /// </remarks>
     public class AIControlEntitlement : Entitlement
     {
-        public const string UniqueID = "43c12678-e2aa-46d3-bfa7-0b71b690be4d";
+        public const string UniqueID = "43c12678e2aa46d3bfa70b71b690be4d";
 
         public const string NormalizedKey = "aicontrol";
 

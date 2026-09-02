@@ -18,7 +18,7 @@ namespace Sufficit.AI
     /// </remarks>
     public class AIUserEntitlement : Entitlement, ISelfContextEntitlement
     {
-        public const string UniqueID = "12aca70d-1b97-4b4c-9029-5d0eb7db3260";
+        public const string UniqueID = "12aca70d1b974b4c90295d0eb7db3260";
 
         public const string NormalizedKey = "aiuser";
 

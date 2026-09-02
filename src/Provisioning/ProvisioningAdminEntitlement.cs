@@ -5,7 +5,7 @@ namespace Sufficit.Provisioning
 {
     public class ProvisioningAdminEntitlement : Entitlement
     {
-        public const string UniqueID = "2353d733-50ff-4114-9626-d0120bcc5063";
+        public const string UniqueID = "2353d73350ff41149626d0120bcc5063";
         public const string RoleID = ProvisioningRole.UniqueID;
 
         public override Guid ID { get; } = Guid.Parse(UniqueID);

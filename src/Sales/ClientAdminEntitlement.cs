@@ -5,7 +5,7 @@ namespace Sufficit.Sales
 {
     public class ClientAdminEntitlement : Entitlement
     {
-        public const string UniqueID = "9d7c9980-841a-4c93-bd64-8ade55a2f634";
+        public const string UniqueID = "9d7c9980841a4c93bd648ade55a2f634";
 
         public const string RoleID = SalesManagerRole.UniqueID;
 

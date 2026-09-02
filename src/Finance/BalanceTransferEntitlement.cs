@@ -7,7 +7,7 @@ namespace Sufficit.Finance
 {
     public class BalanceTransferEntitlement : Entitlement
     {
-        public const string UniqueID = "17f20ed1-1937-4f75-b419-31987a892ca0";
+        public const string UniqueID = "17f20ed119374f75b41931987a892ca0";
         public const string RoleID = FinancialRole.UniqueID;
 
         public override Guid ID => Guid.Parse(UniqueID);

@@ -5,7 +5,7 @@ namespace Sufficit.Identity
 {
     public class PolicyUpdateEntitlement : Entitlement
     {
-        public const string UniqueID = "96910621-7b5c-40cd-af9a-0da4b78fe6f4";
+        public const string UniqueID = "969106217b5c40cdaf9a0da4b78fe6f4";
 
         public const string NormalizedKey = "policyupdate";
         

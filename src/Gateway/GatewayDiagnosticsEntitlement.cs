@@ -8,7 +8,7 @@ namespace Sufficit.Gateway
     /// </summary>
     public sealed class GatewayDiagnosticsEntitlement : Entitlement
     {
-        public const string UniqueID = "1dc24b3a-c724-40c1-9793-cc8a74ad61c9";
+        public const string UniqueID = "1dc24b3ac72440c19793cc8a74ad61c9";
         public const string RoleID = AdministratorRole.UniqueID;
 
         public override Guid ID => Guid.Parse(UniqueID);

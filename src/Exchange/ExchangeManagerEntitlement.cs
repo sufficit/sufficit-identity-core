@@ -7,7 +7,7 @@ namespace Sufficit.Exchange
 {
     public class ExchangeManagerEntitlement : Entitlement
     {
-        public const string UniqueID = "2c45c5ac-f6a6-6d86-babc-1ed8c6ccc83b";
+        public const string UniqueID = "2c45c5acf6a66d86babc1ed8c6ccc83b";
 
         public const string RoleID = ExchangeManagerRole.UniqueID;
 

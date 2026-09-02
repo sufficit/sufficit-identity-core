@@ -14,13 +14,19 @@ Two stable identifiers, both declared explicitly:
 ```csharp
 public class PhoneCallsEntitlement : Entitlement
 {
-    public const string UniqueID = "cf3c66ab-db24-48b6-8c28-4603540286de";
+    public const string UniqueID = "cf3c66abdb2448b68c284603540286de";
 
     public override Guid ID => Guid.Parse(UniqueID);
     public override string Key => "phonecalls";
     public override string Name => "phone call access";
 }
 ```
+
+The literal is written in the compact (`N`) form. `Guid.Parse` accepts both
+spellings and yields the same value, so the spelling is a source-level choice
+rather than a contract — what travels is the `Guid`, never the text. Declaring
+one form consistently is what keeps a string comparison from being written by
+accident somewhere downstream.
 
 - **`ID`** — the identity used for equality. Two entitlements are the same if
   and only if their `ID` matches.

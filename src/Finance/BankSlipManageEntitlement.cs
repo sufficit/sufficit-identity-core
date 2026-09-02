@@ -9,7 +9,7 @@ namespace Sufficit.Finance
     /// </summary>
     public class BankSlipManageEntitlement : BankSlipEntitlement
     {
-        public new const string UniqueID = "139e7b81-6b3c-450a-909c-cd2b7b25f543";
+        public new const string UniqueID = "139e7b816b3c450a909ccd2b7b25f543";
         public new const string RoleID = FinancialManagerRole.UniqueID;
 
         public override Guid ID => Guid.Parse(UniqueID);

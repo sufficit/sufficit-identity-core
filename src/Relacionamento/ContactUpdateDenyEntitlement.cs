@@ -7,7 +7,7 @@ namespace Sufficit.Relacionamento
 {
     public class ContactUpdateDenyEntitlement : Entitlement
     {
-        public const string UniqueID = "9a989de2-1f97-449c-af29-6e12d4d91491";
+        public const string UniqueID = "9a989de21f97449caf296e12d4d91491";
 
         public override Guid ID => Guid.Parse(UniqueID);
 
