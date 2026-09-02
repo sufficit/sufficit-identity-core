@@ -35,7 +35,7 @@ FEATURES = {
 }
 
 # Base abstractions, not entitlements.
-ABSTRACTIONS = {"Directive", "IDirective", "ISelfContextDirective", "DirectiveBase"}
+ABSTRACTIONS = {"Entitlement", "IEntitlement", "ISelfContextEntitlement", "EntitlementBase"}
 
 
 def literal(text: str, pattern: str) -> str | None:
@@ -83,7 +83,7 @@ def main() -> int:
 
     for folder, title in FEATURES.items():
         rows = []
-        for path in sorted((SRC / folder).glob("*Directive.cs")):
+        for path in sorted((SRC / folder).glob("*Entitlement.cs")):
             if path.stem in ABSTRACTIONS:
                 continue
 
@@ -100,7 +100,7 @@ def main() -> int:
                 path.stem,
                 entitlement_name(text) or "",
                 identifier,
-                "ISelfContextDirective" in text,
+                "ISelfContextEntitlement" in text,
             ))
 
         if not rows:
@@ -139,6 +139,14 @@ def main() -> int:
         print(
             "\nFix the declaration or teach this generator the shape. Publishing an\n"
             "incomplete catalogue as if it were complete is the failure being avoided.",
+            file=sys.stderr)
+        return 1
+
+    if not index:
+        print(
+            "No entitlements found at all. Either the declarations moved or the\n"
+            "file pattern is stale — an empty catalogue that exits successfully is\n"
+            "the same silent lie this generator exists to prevent.",
             file=sys.stderr)
         return 1
 

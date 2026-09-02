@@ -27,7 +27,7 @@ namespace Sufficit.Identity
         public const string Name = "name";
 
         /// <summary>
-        /// Define user directives policies
+        /// Define user entitlements policies
         /// </summary>
         /// <remarks>
         ///     Short historical name: no namespace, and absent from the IANA JWT
@@ -43,7 +43,7 @@ namespace Sufficit.Identity
         ///     2.2.3.2, with SCIM semantics from RFC 7643 section 4.1.2.
         /// </summary>
         /// <remarks>
-        ///     Emitted alongside <see cref="Directive"/> during the transition.
+        ///     Emitted alongside <see cref="Entitlement"/> during the transition.
         ///     Readers accept both; producers stop emitting the short name only
         ///     after the last consumer has migrated, never before.
         /// </remarks>

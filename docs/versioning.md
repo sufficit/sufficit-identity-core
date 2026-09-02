@@ -51,7 +51,7 @@ nothing more. It does, however, break compilation for consumers, which makes it
 a coordinated change rather than a free one.
 
 **Do not add a compatibility subclass.** Entitlement discovery enumerates every
-type implementing `IDirective` through reflection, so an old name kept as a
+type implementing `IEntitlement` through reflection, so an old name kept as a
 subclass of the new one would be discovered as a *second, separate*
 entitlement: duplicates in every listing. Worse, `HasPolicy<T>` matches by type,
 and an instance of the new type is not an instance of the old one — checks

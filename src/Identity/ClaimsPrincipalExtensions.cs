@@ -52,38 +52,38 @@ namespace Sufficit.Identity
             
         /// <summary>
         ///     Empty ContextId means that user has rights on all contexts ids, except for
-        ///     self-context directives, where it means the authenticated user's own context.
+        ///     self-context entitlements, where it means the authenticated user's own context.
         /// </summary>
-        public static bool HasPolicy<T>(this ClaimsPrincipal principal, Guid contextid) where T : IDirective
+        public static bool HasPolicy<T>(this ClaimsPrincipal principal, Guid contextid) where T : IEntitlement
         {
-            foreach (var userDirective in GetUserPolicies(principal))
+            foreach (var userEntitlement in GetUserPolicies(principal))
             {
-                if (userDirective.Directive is T && MatchesContext(principal, userDirective, contextid))
+                if (userEntitlement.Entitlement is T && MatchesContext(principal, userEntitlement, contextid))
                     return true;
             }
             return false;
         }
 
-        /// <inheritdoc cref="HasDirective"/>
-        public static IEnumerable<Guid> HasDirective<T>(this ClaimsPrincipal principal) where T : IDirective, new()
-            => principal.HasDirective(new T());
+        /// <inheritdoc cref="HasEntitlement"/>
+        public static IEnumerable<Guid> HasEntitlement<T>(this ClaimsPrincipal principal) where T : IEntitlement, new()
+            => principal.HasEntitlement(new T());
 
-        /// <inheritdoc cref="HasDirective"/>
-        public static bool HasDirective<T>(this ClaimsPrincipal principal, Guid context) where T : IDirective, new()
-            => principal.HasDirective(new T()).Any(s => s == context);
+        /// <inheritdoc cref="HasEntitlement"/>
+        public static bool HasEntitlement<T>(this ClaimsPrincipal principal, Guid context) where T : IEntitlement, new()
+            => principal.HasEntitlement(new T()).Any(s => s == context);
 
         /// <summary>
-        ///     Returns effective contexts. For self-context directives, an empty stored
+        ///     Returns effective contexts. For self-context entitlements, an empty stored
         ///     context is resolved to the authenticated user's own ID.
         /// </summary>
-        public static IEnumerable<Guid> HasDirective(this ClaimsPrincipal principal, IDirective directive)
+        public static IEnumerable<Guid> HasEntitlement(this ClaimsPrincipal principal, IEntitlement entitlement)
         {
             var items = new HashSet<Guid>();
-            foreach (var userDirective in GetUserPolicies(principal))
+            foreach (var userEntitlement in GetUserPolicies(principal))
             {
-                if (userDirective.Directive.Equals(directive))
+                if (userEntitlement.Entitlement.Equals(entitlement))
                 {
-                    var context = GetEffectiveContext(principal, userDirective);
+                    var context = GetEffectiveContext(principal, userEntitlement);
                     if (context.HasValue)
                         items.Add(context.Value);
                 }
@@ -92,31 +92,31 @@ namespace Sufficit.Identity
         }
 
         /// <summary>
-        /// Indicates that a Principal have a directive on any context
+        /// Indicates that a Principal have a entitlement on any context
         /// </summary>
         /// <returns></returns>
-        public static bool HasPolicy(this ClaimsPrincipal principal, IDirective directive)
+        public static bool HasPolicy(this ClaimsPrincipal principal, IEntitlement entitlement)
         {
-            foreach (var userDirective in GetUserPolicies(principal))
+            foreach (var userEntitlement in GetUserPolicies(principal))
             {
-                if (userDirective.Directive.Equals(directive) &&
-                    GetEffectiveContext(principal, userDirective).HasValue)
+                if (userEntitlement.Entitlement.Equals(entitlement) &&
+                    GetEffectiveContext(principal, userEntitlement).HasValue)
                     return true;
             }
             return false;
         }
 
         /// <summary>
-        /// User contexts that requested directives exists.
-        /// Handles both individual directive claims and JSON-array encoded claims
-        /// (where the identity provider packs multiple directives into a single claim value).
+        /// User contexts that requested entitlements exists.
+        /// Handles both individual entitlement claims and JSON-array encoded claims
+        /// (where the identity provider packs multiple entitlements into a single claim value).
         /// </summary>
         public static IEnumerable<UserPolicy> GetUserPolicies(this ClaimsPrincipal principal)
             => GetUserPolicies(principal, null);
 
         /// <summary>
-        /// User contexts that requested directives exists, logging and ignoring malformed
-        /// or unknown directive claims so one product-specific claim cannot reject the user.
+        /// User contexts that requested entitlements exists, logging and ignoring malformed
+        /// or unknown entitlement claims so one product-specific claim cannot reject the user.
         /// </summary>
         public static IEnumerable<UserPolicy> GetUserPolicies(this ClaimsPrincipal principal, ILogger? logger)
         {
@@ -127,7 +127,7 @@ namespace Sufficit.Identity
 
                 var trimmed = claim.Value.TrimStart();
 
-                // JSON array: identity provider encoded multiple directives as a single claim
+                // JSON array: identity provider encoded multiple entitlements as a single claim
 #if NETSTANDARD2_0
                 if (trimmed.StartsWith("["))
 #else
@@ -142,7 +142,7 @@ namespace Sufficit.Identity
                     }
                     catch (Exception ex)
                     {
-                        LogDirectiveWarning(logger, claim.Value, ex.GetType().Name);
+                        LogEntitlementWarning(logger, claim.Value, ex.GetType().Name);
                     }
 
                     foreach (var entry in entries)
@@ -163,7 +163,7 @@ namespace Sufficit.Identity
                 if (trimmed.StartsWith('{')) continue;
 #endif
 
-                // Plain scalar directive value
+                // Plain scalar entitlement value
                 if (!claim.Value.Contains(':')) continue;
                 var policy = TryParseUserPolicy(claim, logger);
                 if (policy != null) yield return policy;
@@ -179,7 +179,7 @@ namespace Sufficit.Identity
             try { return claim.ToUserPolicy(); }
             catch (Exception ex)
             {
-                LogDirectiveWarning(logger, claim.Value, GetFailureReason(ex));
+                LogEntitlementWarning(logger, claim.Value, GetFailureReason(ex));
                 return null;
             }
         }
@@ -188,24 +188,24 @@ namespace Sufficit.Identity
         {
             if (exception is ArgumentException argumentException)
             {
-                if (argumentException.ParamName == "key") return "UnknownDirective";
+                if (argumentException.ParamName == "key") return "UnknownEntitlement";
                 if (argumentException.ParamName == "context") return "InvalidContext";
             }
 
             return exception.GetType().Name;
         }
 
-        private static void LogDirectiveWarning(ILogger? logger, string value, string reason)
+        private static void LogEntitlementWarning(ILogger? logger, string value, string reason)
         {
             if (logger == null) return;
 
             logger.LogWarning(
-                "Ignoring invalid or unknown directive claim. DirectiveKey={DirectiveKey} Reason={Reason}",
-                GetDirectiveKeyForLog(value),
+                "Ignoring invalid or unknown entitlement claim. EntitlementKey={EntitlementKey} Reason={Reason}",
+                GetEntitlementKeyForLog(value),
                 reason);
         }
 
-        private static string GetDirectiveKeyForLog(string value)
+        private static string GetEntitlementKeyForLog(string value)
         {
             if (string.IsNullOrWhiteSpace(value)) return "<empty>";
 
@@ -252,7 +252,7 @@ namespace Sufficit.Identity
             if (policy.IDContext != Guid.Empty)
                 return policy.IDContext == contextId;
 
-            if (policy.Directive is not ISelfContextDirective)
+            if (policy.Entitlement is not ISelfContextEntitlement)
                 return true;
 
             var userId = principal.GetUserId();
@@ -264,7 +264,7 @@ namespace Sufficit.Identity
             if (policy.IDContext != Guid.Empty)
                 return policy.IDContext;
 
-            if (policy.Directive is not ISelfContextDirective)
+            if (policy.Entitlement is not ISelfContextEntitlement)
                 return Guid.Empty;
 
             var userId = principal.GetUserId();

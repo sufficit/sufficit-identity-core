@@ -12,7 +12,7 @@ For the list of entitlements that exist, see the
 Two stable identifiers, both declared explicitly:
 
 ```csharp
-public class PhoneCallsDirective : Directive
+public class PhoneCallsEntitlement : Entitlement
 {
     public const string UniqueID = "cf3c66ab-db24-48b6-8c28-4603540286de";
 
@@ -36,7 +36,7 @@ company or data boundary the permission applies to, and it is always explicit
 at the call site:
 
 ```csharp
-principal.HasDirective<PhoneCallsDirective>(contextId)
+principal.HasEntitlement<PhoneCallsEntitlement>(contextId)
 ```
 
 A principal may hold the same entitlement in many contexts, different

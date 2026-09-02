@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,19 +62,19 @@ namespace Sufficit.Identity
         {
             var roles = new HashSet<Guid>();
 
-            // Directive claims are an extensible contract shared by several
+            // Entitlement claims are an extensible contract shared by several
             // products. A service running an older Identity.Core must ignore a
-            // directive it does not understand instead of rejecting the whole
+            // entitlement it does not understand instead of rejecting the whole
             // access token. GetUserPolicies already applies that fail-closed
-            // behavior: malformed or unknown directives grant no policy.
+            // behavior: malformed or unknown entitlements grant no policy.
             foreach (var policy in user.GetUserPolicies(logger))
             {
                 if (!user.Policies.Contains(policy))
                 {
                     user.Policies.Add(policy);
 
-                    if (policy.Directive.IDRole != Guid.Empty)
-                        roles.Add(policy.Directive.IDRole);
+                    if (policy.Entitlement.IDRole != Guid.Empty)
+                        roles.Add(policy.Entitlement.IDRole);
                 }
             }
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
@@ -13,13 +13,13 @@ namespace Sufficit.Identity
         /// </summary>
         public UserPolicyBase() { }
 
-        public UserPolicyBase(Guid directive, Guid context)
+        public UserPolicyBase(Guid entitlement, Guid context)
         {
-            IDDirective     = directive;
+            IDDirective     = entitlement;
             IDContext       = context;
         }
 
-        [DataMember(Name = "iddirective")]
+        [DataMember(Name = "identitlement")]
         public Guid IDDirective { get; set; }
 
         [DataMember(Name = "idcontext")]

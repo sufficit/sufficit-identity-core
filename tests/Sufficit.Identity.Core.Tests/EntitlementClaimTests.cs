@@ -13,7 +13,7 @@ namespace Sufficit.Identity.Core.Tests;
 /// producers stop emitting the short name. Reading the claim is not enough:
 /// the first attempt at this accepted <c>entitlements</c> in the enumeration
 /// and then threw it away one call later, because the parser still rejected any
-/// claim type other than <c>directive</c>. The reader looked correct and every
+/// claim type other than <c>entitlement</c>. The reader looked correct and every
 /// standard-named grant was silently discarded — which is the failure this file
 /// exists to prevent.
 /// </remarks>
@@ -32,7 +32,7 @@ public sealed class EntitlementClaimTests
         var principal = PrincipalWith(ClaimTypes.Entitlement);
 
         Assert.True(
-            principal.HasEntitlement<PhoneCallsDirective>(Guid.Parse(Context)),
+            principal.HasEntitlement<PhoneCallsEntitlement>(Guid.Parse(Context)),
             "a grant carried in the RFC 9068 container was not honoured");
     }
 
@@ -41,7 +41,7 @@ public sealed class EntitlementClaimTests
     {
         var principal = PrincipalWith(ClaimTypes.Directive);
 
-        Assert.True(principal.HasEntitlement<PhoneCallsDirective>(Guid.Parse(Context)));
+        Assert.True(principal.HasEntitlement<PhoneCallsEntitlement>(Guid.Parse(Context)));
     }
 
     [Fact]
@@ -50,8 +50,8 @@ public sealed class EntitlementClaimTests
         // If these ever diverge, a consumer migrating from one name to the other
         // would silently change what it permits.
         Assert.Equal(
-            PrincipalWith(ClaimTypes.Directive).HasEntitlement<PhoneCallsDirective>(),
-            PrincipalWith(ClaimTypes.Entitlement).HasEntitlement<PhoneCallsDirective>());
+            PrincipalWith(ClaimTypes.Directive).HasEntitlement<PhoneCallsEntitlement>(),
+            PrincipalWith(ClaimTypes.Entitlement).HasEntitlement<PhoneCallsEntitlement>());
     }
 
     [Fact]
@@ -59,7 +59,7 @@ public sealed class EntitlementClaimTests
     {
         var principal = PrincipalWith(ClaimTypes.Entitlement);
 
-        Assert.False(principal.HasEntitlement<PhoneCallsDirective>(
+        Assert.False(principal.HasEntitlement<PhoneCallsEntitlement>(
             Guid.Parse("00000000-0000-0000-0000-000000000000")));
     }
 
@@ -71,7 +71,7 @@ public sealed class EntitlementClaimTests
         var principal = PrincipalWith(ClaimTypes.Entitlement);
 
         Assert.Equal(
-            principal.HasDirective<PhoneCallsDirective>(),
-            principal.HasEntitlement<PhoneCallsDirective>());
+            principal.HasEntitlement<PhoneCallsEntitlement>(),
+            principal.HasEntitlement<PhoneCallsEntitlement>());
     }
 }

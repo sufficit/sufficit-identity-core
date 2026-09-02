@@ -8,7 +8,7 @@ namespace Sufficit.Identity
     public static class ClaimExtensions
     {
         /// <summary>
-        /// Create a UserPolicy from (name):(guid) directive claim 
+        /// Create a UserPolicy from (name):(guid) entitlement claim 
         /// </summary>
         /// <param name="claim">must be of type <see cref="ClaimTypes.Directive"/></param>
         /// <returns></returns>
@@ -26,21 +26,21 @@ namespace Sufficit.Identity
                 throw new Exception($"invalid claim type: { claim.Type }");
             if (string.IsNullOrWhiteSpace(claim.Value)) throw new Exception("empty claim value");
 
-            // Some identity providers encode all directives as a single JSON-array claim value.
+            // Some identity providers encode all entitlements as a single JSON-array claim value.
             // Use the first ':' only so that GUID values containing colons don't break the parse,
             // and reject values that don't produce exactly two non-empty parts.
             var separatorIndex = claim.Value.IndexOf(':');
             if (separatorIndex <= 0 || separatorIndex == claim.Value.Length - 1)
                 throw new Exception($"invalid claim value: { claim.Value }");
 
-            var directiveKey = claim.Value.Substring(0, separatorIndex);
+            var entitlementKey = claim.Value.Substring(0, separatorIndex);
             var contextId    = claim.Value.Substring(separatorIndex + 1);
 
             // A JSON-array value starts with '[' — reject it as unsupported in this method.
-            if (directiveKey.TrimStart().StartsWith("["))
+            if (entitlementKey.TrimStart().StartsWith("["))
                 throw new Exception($"invalid claim value: { claim.Value }");
 
-            return Utils.ToUserPolicy(directiveKey, contextId);
+            return Utils.ToUserPolicy(entitlementKey, contextId);
         }
 
         public static UserPolicy ToUserPolicy(this UserClaim claim)

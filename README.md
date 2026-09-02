@@ -58,7 +58,7 @@ compensates for the other.
 
 ```csharp
 // May this principal read phone calls in this context?
-if (principal.HasDirective<PhoneCallsDirective>(contextId))
+if (principal.HasEntitlement<PhoneCallsEntitlement>(contextId))
 {
     // ...
 }
@@ -73,9 +73,9 @@ exception.
 > [RFC 9068 §2.2.3.2](https://www.rfc-editor.org/rfc/rfc9068#section-2.2.3.2)
 > and the SCIM semantics it borrows from
 > ([RFC 7643 §4.1.2](https://www.rfc-editor.org/rfc/rfc7643#section-4.1.2)).
-> The types in this library are still named `*Directive`; see
-> [the decision record](docs/decisions/0001-entitlement-naming.md) for why the
-> rename is staged rather than immediate.
+> The rename is complete in this library. Consumers migrate by taking the new
+> major version when they are ready; see
+> [the decision record](docs/decisions/0001-entitlement-naming.md).
 
 ## Contributing
 

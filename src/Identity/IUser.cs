@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -17,7 +17,7 @@ namespace Sufficit.Identity
         string Title { get; }
 
         /// <summary>
-        /// Authorization directives and contexts
+        /// Authorization entitlements and contexts
         /// </summary>
         IEnumerable<UserPolicy> Policies { get; }
 

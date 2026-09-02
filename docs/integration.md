@@ -27,7 +27,7 @@ identity service becomes a dependency of every request in the platform.
 Ask the question with the context explicit:
 
 ```csharp
-if (principal.HasDirective<PhoneCallsDirective>(contextId))
+if (principal.HasEntitlement<PhoneCallsEntitlement>(contextId))
 {
     // ...
 }

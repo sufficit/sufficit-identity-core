@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,16 +6,16 @@ using System.Text;
 namespace Sufficit.Identity
 {
     /// <summary>
-    /// Is an IDirective applied to an Context (ID)
+    /// Is an IEntitlement applied to an Context (ID)
     /// </summary>
     public class UserPolicy : UserPolicyBase
     {
-        public UserPolicy (Guid idcontext, IDirective directive) : base(directive.ID, idcontext)
+        public UserPolicy (Guid idcontext, IEntitlement entitlement) : base(entitlement.ID, idcontext)
         {
-            Directive = directive; 
+            Entitlement = entitlement; 
         }
 
-        public IDirective Directive { get; }
+        public IEntitlement Entitlement { get; }
 
         public override bool Equals (object? other) =>
             base.Equals(other);

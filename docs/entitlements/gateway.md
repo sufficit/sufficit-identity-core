@@ -5,7 +5,7 @@ this library, not operational data.
 
 | Key | Type | Name | ID | Self-context |
 | --- | --- | --- | --- | --- |
-| `gatewaydiagnostics` | `GatewayDiagnosticsDirective` | depurar gateways | `1dc24b3a-c724-40c1-9793-cc8a74ad61c9` | — |
+| `gatewaydiagnostics` | `GatewayDiagnosticsEntitlement` | depurar gateways | `1dc24b3a-c724-40c1-9793-cc8a74ad61c9` | — |
 
 A *self-context* entitlement resolves an empty stored context to the
 principal's own identifier — read the empty value as *their own*, never as

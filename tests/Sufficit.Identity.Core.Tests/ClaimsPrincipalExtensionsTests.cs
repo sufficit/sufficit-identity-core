@@ -11,21 +11,21 @@ public class ClaimsPrincipalExtensionsTests
     public void EmptyAIUserContextResolvesToAuthenticatedUser()
     {
         var userId = Guid.NewGuid();
-        var principal = CreatePrincipal(userId, $"{AIUserDirective.NormalizedKey}:{Guid.Empty}");
+        var principal = CreatePrincipal(userId, $"{AIUserEntitlement.NormalizedKey}:{Guid.Empty}");
 
-        Assert.True(principal.HasPolicy<AIUserDirective>(userId));
-        Assert.False(principal.HasPolicy<AIUserDirective>(Guid.NewGuid()));
-        Assert.Equal(new[] { userId }, principal.HasDirective<AIUserDirective>());
+        Assert.True(principal.HasPolicy<AIUserEntitlement>(userId));
+        Assert.False(principal.HasPolicy<AIUserEntitlement>(Guid.NewGuid()));
+        Assert.Equal(new[] { userId }, principal.HasEntitlement<AIUserEntitlement>());
         Assert.Contains(userId, principal.KnowingContexts());
     }
 
     [Fact]
     public void EmptyAIUserContextWithoutValidSubjectGrantsNoAccess()
     {
-        var principal = CreatePrincipal(null, $"{AIUserDirective.NormalizedKey}:{Guid.Empty}");
+        var principal = CreatePrincipal(null, $"{AIUserEntitlement.NormalizedKey}:{Guid.Empty}");
 
-        Assert.False(principal.HasPolicy(new AIUserDirective()));
-        Assert.Empty(principal.HasDirective<AIUserDirective>());
+        Assert.False(principal.HasPolicy(new AIUserEntitlement()));
+        Assert.Empty(principal.HasEntitlement<AIUserEntitlement>());
         Assert.Empty(principal.KnowingContexts());
     }
 
@@ -34,28 +34,28 @@ public class ClaimsPrincipalExtensionsTests
     {
         var userId = Guid.NewGuid();
         var customerId = Guid.NewGuid();
-        var principal = CreatePrincipal(userId, $"{AIUserDirective.NormalizedKey}:{customerId}");
+        var principal = CreatePrincipal(userId, $"{AIUserEntitlement.NormalizedKey}:{customerId}");
 
-        Assert.True(principal.HasPolicy<AIUserDirective>(customerId));
-        Assert.False(principal.HasPolicy<AIUserDirective>(userId));
-        Assert.Equal(new[] { customerId }, principal.HasDirective<AIUserDirective>());
+        Assert.True(principal.HasPolicy<AIUserEntitlement>(customerId));
+        Assert.False(principal.HasPolicy<AIUserEntitlement>(userId));
+        Assert.Equal(new[] { customerId }, principal.HasEntitlement<AIUserEntitlement>());
     }
 
     [Fact]
     public void EmptyAIControlContextRemainsGlobal()
     {
-        var principal = CreatePrincipal(Guid.NewGuid(), $"{AIControlDirective.NormalizedKey}:{Guid.Empty}");
+        var principal = CreatePrincipal(Guid.NewGuid(), $"{AIControlEntitlement.NormalizedKey}:{Guid.Empty}");
 
-        Assert.True(principal.HasPolicy<AIControlDirective>(Guid.NewGuid()));
-        Assert.True(principal.HasPolicy(new AIControlDirective()));
-        Assert.Equal(new[] { Guid.Empty }, principal.HasDirective<AIControlDirective>());
+        Assert.True(principal.HasPolicy<AIControlEntitlement>(Guid.NewGuid()));
+        Assert.True(principal.HasPolicy(new AIControlEntitlement()));
+        Assert.Equal(new[] { Guid.Empty }, principal.HasEntitlement<AIControlEntitlement>());
     }
 
-    private static ClaimsPrincipal CreatePrincipal(Guid? userId, string directive)
+    private static ClaimsPrincipal CreatePrincipal(Guid? userId, string entitlement)
     {
         var claims = new List<Claim>
         {
-            new(Sufficit.Identity.ClaimTypes.Directive, directive)
+            new(Sufficit.Identity.ClaimTypes.Directive, entitlement)
         };
 
         if (userId.HasValue)
