@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -29,7 +29,25 @@ namespace Sufficit.Identity
         /// <summary>
         /// Define user directives policies
         /// </summary>
+        /// <remarks>
+        ///     Short historical name: no namespace, and absent from the IANA JWT
+        ///     claim registry, which RFC 7519 section 4.3 advises against for
+        ///     private claims. Kept because consumers still read it; see
+        ///     <see cref="Entitlement"/> for the replacement and
+        ///     docs/decisions/0001-entitlement-naming.md for the migration order.
+        /// </remarks>
         public const string Directive = "directive";
+
+        /// <summary>
+        ///     Standard container for authorization grants: RFC 9068 section
+        ///     2.2.3.2, with SCIM semantics from RFC 7643 section 4.1.2.
+        /// </summary>
+        /// <remarks>
+        ///     Emitted alongside <see cref="Directive"/> during the transition.
+        ///     Readers accept both; producers stop emitting the short name only
+        ///     after the last consumer has migrated, never before.
+        /// </remarks>
+        public const string Entitlement = "entitlements";
 
         /// <summary>
         /// Define user id in GUID format

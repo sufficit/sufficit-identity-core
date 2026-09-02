@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
@@ -17,7 +17,13 @@ namespace Sufficit.Identity
         public static UserPolicy ToUserPolicy(this System.Security.Claims.Claim claim)
         {
             if (claim == null) throw new ArgumentNullException(nameof(claim));
-            if (claim.Type != ClaimTypes.Directive) throw new Exception($"invalid claim type: { claim.Type }");
+            // Both names carry the same values during the transition: "entitlements"
+            // is the standard container (RFC 9068 section 2.2.3.2), "directive" the
+            // short historical name. Accepting only the old one here would make a
+            // reader upstream look correct while every standard-named grant was
+            // discarded on this line.
+            if (claim.Type != ClaimTypes.Directive && claim.Type != ClaimTypes.Entitlement)
+                throw new Exception($"invalid claim type: { claim.Type }");
             if (string.IsNullOrWhiteSpace(claim.Value)) throw new Exception("empty claim value");
 
             // Some identity providers encode all directives as a single JSON-array claim value.
@@ -39,7 +45,8 @@ namespace Sufficit.Identity
 
         public static UserPolicy ToUserPolicy(this UserClaim claim)
         {
-            if (claim.ClaimType != ClaimTypes.Directive) 
+            if (claim.ClaimType != ClaimTypes.Directive
+                && claim.ClaimType != ClaimTypes.Entitlement)
                 throw new Exception($"invalid claim type: {claim.ClaimType}");
 
             if (claim.ClaimValue == null || string.IsNullOrWhiteSpace(claim.ClaimValue)) 

@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -120,7 +120,8 @@ namespace Sufficit.Identity
         /// </summary>
         public static IEnumerable<UserPolicy> GetUserPolicies(this ClaimsPrincipal principal, ILogger? logger)
         {
-            foreach (var claim in principal.Claims.Where(s => s.Type == ClaimTypes.Directive))
+            foreach (var claim in principal.Claims.Where(s =>
+                s.Type == ClaimTypes.Directive || s.Type == ClaimTypes.Entitlement))
             {
                 if (string.IsNullOrWhiteSpace(claim.Value)) continue;
 
