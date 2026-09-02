@@ -13,7 +13,7 @@ namespace Sufficit.Identity.Core.Tests;
 /// producers stop emitting the short name. Reading the claim is not enough:
 /// the first attempt at this accepted <c>entitlements</c> in the enumeration
 /// and then threw it away one call later, because the parser still rejected any
-/// claim type other than <c>entitlement</c>. The reader looked correct and every
+/// claim type other than <c>directive</c>. The reader looked correct and every
 /// standard-named grant was silently discarded — which is the failure this file
 /// exists to prevent.
 /// </remarks>
@@ -64,14 +64,16 @@ public sealed class EntitlementClaimTests
     }
 
     [Fact]
-    public void The_entitlement_alias_matches_the_original_check()
+    public void The_generic_and_instance_overloads_agree()
     {
-        // The alias must stay an alias. A second implementation is how two call
-        // sites in the same codebase start disagreeing.
+        // The rename left this test comparing a call with itself — an assertion
+        // that cannot fail. Restored to compare the two overloads that do exist,
+        // because a divergence between them would mean two call sites in the
+        // same codebase disagreeing about the same grant.
         var principal = PrincipalWith(ClaimTypes.Entitlement);
 
         Assert.Equal(
             principal.HasEntitlement<PhoneCallsEntitlement>(),
-            principal.HasEntitlement<PhoneCallsEntitlement>());
+            principal.HasEntitlement(new PhoneCallsEntitlement()));
     }
 }

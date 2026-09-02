@@ -11,6 +11,7 @@ with its reason is what stops a deliberate trade-off from being "fixed".
 | [0001](0001-entitlement-naming.md) | The published vocabulary is *entitlement*; the C# types keep their names for now |
 | [0002](0002-no-entitlement-hierarchy.md) | Roles are hierarchical, entitlements are not |
 | [0003](0003-authorization-out-of-the-token.md) | Authorization data is resolved by the application, not carried in the token |
+| [0004](0004-scope-naming-and-audience.md) | Claim-releasing scopes carry no audience; API scopes are named after the API |
 
 ## Writing one
 

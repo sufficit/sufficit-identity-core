@@ -30,6 +30,7 @@ Start with the concepts; the rest assumes that vocabulary.
 | Document | What it answers |
 | --- | --- |
 | [Concepts](docs/concepts.md) | What a scope, a role and an entitlement each decide, and why they are not three levels of the same thing |
+| [Scopes](docs/scopes.md) | What an application may ask for, how scopes are named, and which ones carry an audience |
 | [Entitlements](docs/entitlements.md) | The format, how identity and context are compared, and what makes a value invalid |
 | [Entitlement catalogue](docs/entitlements/README.md) | Every entitlement, grouped by feature |
 | [Roles](docs/roles.md) | Coarse grouping, hierarchy, and where expansion happens |
