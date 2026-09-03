@@ -115,6 +115,10 @@ one is a four-step sequence and the order is not negotiable:
 Between steps 1 and 3 the new name exists and does not work. Say so in the
 scope description — the registry is where someone looks before they migrate.
 
+The manifest that carries the registry rows lives in the product's own
+repository, at `deploy/identity/identity-manifest.v1.json` — see
+[0005](decisions/0005-manifest-location.md) for why it is not centralized.
+
 ## What a scope must never be used for
 
 A scope does not carry a context. `provisioning.manage` says the application
