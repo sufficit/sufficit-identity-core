@@ -3,9 +3,14 @@
 ## Decision
 
 Each product keeps its Identity provisioning manifest in its own repository,
-at `deploy/identity/identity-manifest.v1.json`, and the product's tests own
-its invariants. Identity validates the schema and applies the plan at
+at the **repository root**: `identity-manifest.v1.json`. The product's tests
+own its invariants. Identity validates the schema and applies the plan at
 provisioning time; it does not store or centralize the manifest.
+
+The location is the root — not a nested directory — so every sufficit product
+looks the same from the outside: one canonical file, one path, no
+per-product discovery. Current examples: `sufficit-ai`,
+`sufficit-network-control`, `sufficit-phone`.
 
 ## What was rejected
 
@@ -21,6 +26,12 @@ about authorization, not a build artifact: it changes when access changes,
 which is not the same moment the application builds. Deriving it from code
 would make a scope appear and disappear with release branches.
 
+**A nested convention (`deploy/identity/`).** This decision's original
+location, amended to the root. It buried a top-level contract inside a
+product-specific directory tree, and products without a `deploy/` layout
+(`sufficit-phone`) would have to either invent a new nesting or break the
+convention on adoption.
+
 ## What would make this wrong
 
 - **If a manifest change needed an atomic, cross-product commit** — access
@@ -30,7 +41,3 @@ would make a scope appear and disappear with release branches.
 - **If products repeatedly got the location or shape wrong**, the schema
   validation at `preview` is firing at the wrong layer; move the check into a
   shared test fixture instead of a convention the reviewer enforces.
-
-The `deploy/identity/` directory holds what Identity consumes from the
-product and nothing the product's own runtime reads. Current examples:
-`sufficit-ai`, `sufficit-network-control`.
