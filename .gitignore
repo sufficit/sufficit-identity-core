@@ -6,3 +6,5 @@
 **/.artifacts/
 **/artifacts/
 dist/
+# Worktrees (padrao): arvores de trabalho em <repo>/.worktrees/
+**/.worktrees/
