@@ -31,7 +31,7 @@ public sealed class WireContractTests
     [Fact]
     public void The_standard_claim_name_is_the_rfc_container()
     {
-        // RFC 9068 section 2.2.3.2, plural, with SCIM semantics from RFC 7643.
+        // RFC 9068 section 2.2.3.1, plural, with SCIM semantics from RFC 7643.
         Assert.Equal("entitlements", ClaimTypes.Entitlement);
     }
 

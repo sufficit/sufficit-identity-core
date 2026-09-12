@@ -75,7 +75,7 @@ time, and a screen that shows several contexts at once is a normal case, not an
 exception.
 
 > **Naming.** The published vocabulary is *entitlement*, following
-> [RFC 9068 §2.2.3.2](https://www.rfc-editor.org/rfc/rfc9068#section-2.2.3.2)
+> [RFC 9068 §2.2.3.1](https://www.rfc-editor.org/rfc/rfc9068#section-2.2.3.1)
 > and the SCIM semantics it borrows from
 > ([RFC 7643 §4.1.2](https://www.rfc-editor.org/rfc/rfc7643#section-4.1.2)).
 > The rename is complete in this library. Consumers migrate by taking the new

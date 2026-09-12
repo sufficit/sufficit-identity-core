@@ -25,10 +25,12 @@ namespace Sufficit.Identity
         [JsonPropertyName("token_type")]
         public string TokenType { get; set; } = default!;
 
+        /// <summary>OPTIONAL when identical to the scope requested by the client; REQUIRED when it differs (RFC 6749 §5.1). Null when the server omits it.</summary>
         [JsonPropertyName("scope")]
-        public string Scope { get; set; } = default!;
+        public string? Scope { get; set; }
 
+        /// <summary>OPTIONAL per RFC 6749 §5.1 — null when not issued (e.g. the client-credentials grant, §4.4.3, SHOULD NOT include one).</summary>
         [JsonPropertyName("refresh_token")]
-        public string RefreshToken { get; set; } = default!;
+        public string? RefreshToken { get; set; }
     }
 }

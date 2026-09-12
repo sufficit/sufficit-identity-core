@@ -19,6 +19,17 @@ keys, expiry, and **audience**. An application that skips the audience check
 accepts tokens minted for a different service, which is the whole point of the
 claim.
 
+Three more checks from JWT BCP 225 close the classic holes:
+
+- **Pin the algorithm list** on the validator and reject `alg: none`. A
+  validator that takes the algorithm from the token header accepts
+  key-confusion attacks (BCP 225 §3.1/§3.2).
+- **Issuer must match exactly** the configured value — the keys came from
+  that issuer's discovery document, and only its tokens should verify
+  against them (BCP 225 §3.8).
+- **Accept `typ: at+jwt`** as the access-token type (RFC 9068 §4), keeping
+  the legacy `JWT` only during the migration of older clients.
+
 Nothing on the request path should call the identity service. If it does, the
 identity service becomes a dependency of every request in the platform.
 
@@ -84,6 +95,9 @@ application, so divergence fails in CI instead of appearing in production.
 ## Checklist
 
 - [ ] Token validated locally, including audience
+- [ ] Algorithm list pinned on the validator; `alg: none` rejected
+- [ ] Issuer matches the configured value exactly
+- [ ] Token type restricted to `at+jwt` (legacy `JWT` only during migration)
 - [ ] No identity call on the request path
 - [ ] Context explicit at every check
 - [ ] Cross-context queries filter in the database, not in memory

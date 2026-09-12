@@ -101,21 +101,21 @@ namespace Sufficit.Identity
         /// Expiration date and time (converted from Expiration timestamp)
         /// </summary>
         public DateTime? ExpirationDateTime => Expiration.HasValue
-            ? (DateTime?)DateTimeOffset.FromUnixTimeSeconds(Expiration.Value).DateTime
+            ? (DateTime?)DateTimeOffset.FromUnixTimeSeconds(Expiration.Value).UtcDateTime
             : null;
 
         /// <summary>
         /// Issued at date and time (converted from IssuedAt timestamp)
         /// </summary>
         public DateTime? IssuedAtDateTime => IssuedAt.HasValue
-            ? (DateTime?)DateTimeOffset.FromUnixTimeSeconds(IssuedAt.Value).DateTime
+            ? (DateTime?)DateTimeOffset.FromUnixTimeSeconds(IssuedAt.Value).UtcDateTime
             : null;
 
         /// <summary>
         /// Not before date and time (converted from NotBefore timestamp)
         /// </summary>
         public DateTime? NotBeforeDateTime => NotBefore.HasValue
-            ? (DateTime?)DateTimeOffset.FromUnixTimeSeconds(NotBefore.Value).DateTime
+            ? (DateTime?)DateTimeOffset.FromUnixTimeSeconds(NotBefore.Value).UtcDateTime
             : null;
 
         /// <summary>

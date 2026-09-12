@@ -18,7 +18,7 @@ namespace Sufficit.Identity
         {
             if (claim == null) throw new ArgumentNullException(nameof(claim));
             // Both names carry the same values during the transition: "entitlements"
-            // is the standard container (RFC 9068 section 2.2.3.2), "directive" the
+            // is the standard container (RFC 9068 section 2.2.3.1), "directive" the
             // short historical name. Accepting only the old one here would make a
             // reader upstream look correct while every standard-named grant was
             // discarded on this line.

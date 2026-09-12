@@ -56,6 +56,9 @@ Two rules that matter more than the interval:
 - **Publish the maximum.** The revocation window of the platform is the largest
   interval any consumer uses. If that number is not written down, it is not a
   guarantee.
+- **Never cache past the token's own life.** A cached introspection response
+  MUST NOT outlive the `exp` it reported (RFC 7662 §4) — the ceiling of any
+  cache is the smaller of the two.
 - **Serve stale only deliberately.** When the identity service is unreachable,
   continuing with a cached document is a reasonable choice — extending it
   indefinitely is not. Decide the ceiling, and log when it is used.

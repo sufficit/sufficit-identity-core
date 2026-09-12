@@ -113,7 +113,7 @@ identifier, per
 [RFC 9068 §2.2](https://www.rfc-editor.org/rfc/rfc9068#section-2.2). Machine
 entitlements are granted on the client registration and stamped into the access
 token as the `entitlements` claim
-([RFC 9068 §2.2.3.2](https://www.rfc-editor.org/rfc/rfc9068#section-2.2.3.2)).
+([RFC 9068 §2.2.3.1](https://www.rfc-editor.org/rfc/rfc9068#section-2.2.3.1)).
 
 This differs from how role-derived capabilities work, and the difference is
 deliberate:
@@ -133,7 +133,7 @@ grant survives for up to an hour.
 Two claim names carry the same values today:
 
 - **`entitlements`** — the standard container, defined by
-  [RFC 9068 §2.2.3.2](https://www.rfc-editor.org/rfc/rfc9068#section-2.2.3.2)
+  [RFC 9068 §2.2.3.1](https://www.rfc-editor.org/rfc/rfc9068#section-2.2.3.1)
   with semantics borrowed from
   [RFC 7643 §4.1.2](https://www.rfc-editor.org/rfc/rfc7643#section-4.1.2).
 - **`directive`** — the short historical name. It is not in the IANA JWT claim

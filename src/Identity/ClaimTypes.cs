@@ -40,7 +40,7 @@ namespace Sufficit.Identity
 
         /// <summary>
         ///     Standard container for authorization grants: RFC 9068 section
-        ///     2.2.3.2, with SCIM semantics from RFC 7643 section 4.1.2.
+        ///     2.2.3.1, with SCIM semantics from RFC 7643 section 4.1.2.
         /// </summary>
         /// <remarks>
         ///     Emitted alongside <see cref="Entitlement"/> during the transition.

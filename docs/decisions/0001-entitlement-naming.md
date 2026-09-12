@@ -18,7 +18,7 @@ forces them to move on someone else's schedule.
 ## Why *entitlement*
 
 `entitlements` is the container defined by
-[RFC 9068 §2.2.3.2](https://www.rfc-editor.org/rfc/rfc9068#section-2.2.3.2),
+[RFC 9068 §2.2.3.1](https://www.rfc-editor.org/rfc/rfc9068#section-2.2.3.1),
 with semantics borrowed from
 [RFC 7643 §4.1.2](https://www.rfc-editor.org/rfc/rfc7643#section-4.1.2).
 Carrying this kind of grant in an access token is the path the standard already
