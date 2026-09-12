@@ -42,6 +42,7 @@ Start with the concepts; the rest assumes that vocabulary.
 | [Errors](docs/errors.md) | What to do when a decision cannot be made |
 | [Versioning](docs/versioning.md) | How the contract changes without breaking consumers |
 | [Decisions](docs/decisions/README.md) | Why the design is the way it is |
+| [RFC review](docs/rfc/README.md) | How the code maps to the Internet standards it touches, where it complies, and where it diverges |
 
 ## The shape of an authorization decision
 
