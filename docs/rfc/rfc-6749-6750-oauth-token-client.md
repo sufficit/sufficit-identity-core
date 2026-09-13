@@ -1,7 +1,7 @@
 # RFC 6749 + RFC 6750 — OAuth 2.0 Token Response (client side) & Bearer Token Usage
 
-**Status:** 🟡 partial — the success-response DTO reproduces the RFC 6749 §5.1/§4.2.2 wire names and optionality exactly (nullability fixed in `c0b4d8e`), but `expires_in` stays non-nullable `int` and no token-endpoint error model exists; RFC 6750 is partially not applicable (the library performs no HTTP bearer transmission).
-**Last reviewed:** 2026-09-12T23:55Z · baseline `46eac0a` · fixes verified at `c0b4d8e`
+**Status:** ✅ compliant — the success-response DTO reproduces the RFC 6749 §5.1/§4.2.2 wire names, optionality and omission semantics exactly (nullability `c0b4d8e`, `expires_in` and the §5.2 error shape `ec0787f`); RFC 6750 is partially not applicable (the library performs no HTTP bearer transmission).
+**Last reviewed:** 2026-09-13T00:16Z · baseline `46eac0a` · fixes verified at `ec0787f`
 **Project role:** OAuth **client** (token receiver). `TokenResponse` models the JSON body an OAuth client receives from the token endpoint. This library is not an authorization server and has no endpoints: `src/Sufficit.Identity.Core.csproj` references only `Microsoft.Extensions.*` and `System.Text.Json` packages (read in this review), so no ASP.NET Core/HTTP surface exists to host endpoints or read `Authorization` headers.
 
 ## What the standard requires (only requirements touching this project)
@@ -29,11 +29,11 @@
 
 | Priority | Gap | Concrete impact | Recommendation |
 |---|---|---|---|
-| 🔶 | §5.1 RECOMMENDED-omittable `expires_in` modeled as non-nullable `int` (`src/Identity/TokenResponse.cs:22-23`) | Absent member deserializes to `0` (inferred, same STJ semantics) — an "expires immediately" sentinel indistinguishable from "no lifetime provided", while §5.1 explicitly allows omission | Use `int? ExpiresIn` |
-| 🔶 | No model for the §5.2 / §4.1.2.1 / §4.2.2.1 error response | Deserializing `{"error":"invalid_grant", ...}` into `TokenResponse` yields all-null/zero members; clients cannot distinguish "server refused" from "empty response" | Add an `error`/`error_description`/`error_uri` DTO, or document that consumers must branch on the HTTP status before deserializing |
 | 🔵 | §7.1 ("MUST NOT use an access token if it does not understand the token type") is not supported by any API; `TokenType` is an opaque pass-through and no type normalization exists | Consumers get no help honoring the obligation | Document the consumer obligation on `TokenType`, or add a helper validating known types (case-insensitive per §7.1, e.g. `bearer`) |
 
 Resolved in `c0b4d8e`: `refresh_token`/`scope` are now `string?` with `JsonIgnore(WhenWritingNull)` (`src/Identity/TokenResponse.cs:28-35`), and round-trip tests cover the §4.4.3-legal response, the full §5.1 response and wire-omission on re-serialization (`tests/Sufficit.Identity.Core.Tests/TokenResponseOptionalityTests.cs`).
+
+Resolved in `ec0787f`: `expires_in` is now `int?` (omittable per §5.1; absence no longer collapses into an "expires immediately" `0`) and the §5.2 error shape has its own DTO, `TokenErrorResponse` (`src/Identity/TokenErrorResponse.cs`), with the robust non-null-`error` shape test documented on the type.
 
 Searches performed for claimed absences: every `.cs` file read in full — all 27 files in `src/Identity/`, `src/PrincipalExtensions.cs`, `src/UnauthenticatedExpection.cs`, `src/Sufficit.Identity.Core.csproj`, and all 6 files in `tests/Sufficit.Identity.Core.Tests/`. Across those reads there is no occurrence of `Authorization`, `WWW-Authenticate`, `Bearer` (only a doc-comment example at `src/Identity/TokenIntrospectionResponse.cs:36`), `grant_type`, an `error` JSON member, `HttpClient`, or `HttpContext`. The remaining product folders (`src/AI`, `Cloud`, `Exchange`, `Finance`, `Gateway`, `Provisioning`, `Relacionamento`, `Sales`, `Telephony`) were all enumerated and 16 of their files read — every one is an `Entitlement`/`IRole` catalog with no transport code; the 25 unread siblings all carry `*Entitlement`/`*Role` names (absence claim for those is inferred from naming + structure, marked accordingly). At the start of this review run, `docs/rfc/` contained only `AGENTS.md` (verified by directory listing); `README.md` and other `rfc-*.md` documents appeared during the run, authored by parallel reviewers — this document makes no claims about their content.
 
@@ -50,6 +50,7 @@ Searches performed for claimed absences: every `.cs` file read in full — all 2
 |---|---|---|
 | 2026-09-12T23:02Z | `46eac0a` | Initial analysis (regenerate mode; no prior document existed) |
 | 2026-09-12T23:55Z | `c0b4d8e` | Nullability + wire-omission fixes and round-trip tests verified; `expires_in` optionality and error model remain open |
+| 2026-09-13T00:16Z | `ec0787f` | `expires_in` now `int?` (omittable per §5.1) and `TokenErrorResponse` added (§5.2); status raised to compliant |
 
 ## References
 

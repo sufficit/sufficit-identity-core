@@ -13,7 +13,7 @@ HTTP stack).
 
 | Standard | Status | One line |
 | --- | --- | --- |
-| [RFC 6749 + 6750](rfc-6749-6750-oauth-token-client.md) — OAuth 2.0 / Bearer | 🟡 partial | §5.1 wire names and optionality exact (nullability fixed in `c0b4d8e`); `expires_in` non-nullable and no §5.2 error model remain |
+| [RFC 6749 + 6750](rfc-6749-6750-oauth-token-client.md) — OAuth 2.0 / Bearer | ✅ compliant | §5.1 wire names, optionality and omission semantics exact, plus the §5.2 error DTO (`c0b4d8e` + `ec0787f`) |
 | [RFC 7662](rfc-7662-token-introspection.md) — Token Introspection | ✅ compliant | Response model is §2.2 member-for-member, `aud` string-or-list, `token_type_hint` on the request side (added in `c0b4d8e`) |
 | [RFC 7519](rfc-7519-json-web-token-claims.md) — JWT claims | ✅ compliant | Registered names and shapes modelled exactly; `directive` private name is a documented, test-pinned transition divergence |
 | [RFC 9068](rfc-9068-jwt-access-token-entitlements.md) — JWT access token profile | ✅ compliant | Claim name registered (§2.2.3.1, registry §7.2.1.3); the non-existent-§2.2.3.2 citation defect was fixed in `c0b4d8e` |
@@ -54,3 +54,4 @@ interoperability/reliability, 🔵 polish.
 | --- | --- | --- |
 | 2026-09-12T23:02Z | `46eac0a` | Initial review: 7 applicable standards, families excluded with evidence |
 | 2026-09-12T23:55Z | `c0b4d8e` | Fixes applied: §2.2.3.1 citations (×8), TokenResponse nullability + wire omission, token_type_hint, UtcDateTime helpers, integration/validation guidance; statuses updated (9068 and 7662 raised to compliant) |
+| 2026-09-13T00:16Z | `ec0787f` | `expires_in` omittable (`int?`) and §5.2 `TokenErrorResponse` added; RFC 6749 raised to compliant — review findings now all resolved or advisory (🔵) |
