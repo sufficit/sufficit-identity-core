@@ -20,8 +20,10 @@ namespace Sufficit.Identity
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string? IdToken { get; set; }
 
+        /// <summary>RECOMMENDED but omittable (RFC 6749 §5.1) — the lifetime in seconds of the access token. Null when the server omits it; a consumer must not read it as "expires immediately" (0).</summary>
         [JsonPropertyName("expires_in")]
-        public int ExpiresIn { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public int? ExpiresIn { get; set; }
 
         [JsonPropertyName("token_type")]
         public string TokenType { get; set; } = default!;

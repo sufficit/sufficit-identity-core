@@ -83,4 +83,48 @@ public sealed class TokenResponseOptionalityTests
         Assert.Contains("\"token_type_hint\":\"access_token\"", withHint);
         Assert.DoesNotContain("token_type_hint", withoutHint);
     }
+
+    [Fact]
+    public void An_omitted_expires_in_yields_null_not_zero()
+    {
+        var json = """
+        {
+          "access_token": "t",
+          "token_type": "Bearer"
+        }
+        """;
+
+        var response = JsonSerializer.Deserialize<TokenResponse>(json, Wire)!;
+
+        // §5.1: expires_in is RECOMMENDED but omittable. Absence is null — it
+        // must not collapse into 0, an "expires immediately" sentinel.
+        Assert.Null(response.ExpiresIn);
+        Assert.DoesNotContain("expires_in", JsonSerializer.Serialize(response, Wire));
+    }
+
+    [Fact]
+    public void The_section_5_2_error_shape_binds_to_its_own_dto()
+    {
+        var json = """
+        {
+          "error": "invalid_grant",
+          "error_description": "code was already redeemed",
+          "error_uri": "https://example.com/docs#invalid-grant"
+        }
+        """;
+
+        var error = JsonSerializer.Deserialize<TokenErrorResponse>(json, Wire)!;
+
+        Assert.Equal("invalid_grant", error.Error);
+        Assert.Equal("code was already redeemed", error.ErrorDescription);
+        Assert.Equal("https://example.com/docs#invalid-grant", error.ErrorUri);
+
+        // Round-trip: OPTIONAL members stay off the wire when null (§5.2).
+        var minimal = JsonSerializer.Deserialize<TokenErrorResponse>(
+            """{"error":"invalid_client"}""", Wire)!;
+        var serialized = JsonSerializer.Serialize(minimal, Wire);
+        Assert.Contains("\"error\":\"invalid_client\"", serialized);
+        Assert.DoesNotContain("error_description", serialized);
+        Assert.DoesNotContain("error_uri", serialized);
+    }
 }
