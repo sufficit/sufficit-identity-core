@@ -41,6 +41,13 @@ public sealed class TokenResponseOptionalityTests
         // null-reference exception hidden behind a non-nullable property.
         Assert.Null(response.RefreshToken);
         Assert.Null(response.Scope);
+
+        // §5.1 omits OPTIONAL members rather than emitting them as null: a
+        // server re-serializing this DTO must not put them on the wire either.
+        var reserialized = JsonSerializer.Serialize(response, Wire);
+        Assert.DoesNotContain("refresh_token", reserialized);
+        Assert.DoesNotContain("scope", reserialized);
+        Assert.DoesNotContain("id_token", reserialized);
     }
 
     [Fact]

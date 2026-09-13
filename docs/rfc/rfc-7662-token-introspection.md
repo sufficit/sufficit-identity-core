@@ -1,7 +1,7 @@
 # RFC 7662 — OAuth 2.0 Token Introspection
 
-**Status:** 🟡 partial — the response model covers every §2.2 member with correct types and a robust string-or-array `aud` converter, but the request model omits `token_type_hint`, does not address the §2.1 form-encoding contract, and malformed/401 responses collapse into `active=false`.
-**Last reviewed:** 2026-09-12T23:02Z · commit `46eac0a`
+**Status:** ✅ compliant — the response model covers every §2.2 member with correct types and a robust string-or-array `aud` converter, and the request model now carries the OPTIONAL `token_type_hint` (added in `c0b4d8e`). The form-encoding and HTTP-status notes below are consumer guidance, not library defects.
+**Last reviewed:** 2026-09-12T23:55Z · baseline `46eac0a` · fixes verified at `c0b4d8e`
 **Project role:** introspection **client** (the protected-resource side that queries an authorization server and reads §2.2 responses). `TokenIntrospectionResponse` models the JSON response; `TokenValidationRequest` models the request body. No endpoint is implemented and no HTTP call is performed inside the library: `src/Sufficit.Identity.Core.csproj` references only `Microsoft.Extensions.*` and `System.Text.Json` packages (read in this review), so the TLS (§2) and endpoint-authorization (§2.1, §4) obligations fall entirely on the consuming host.
 
 ## What the standard requires
@@ -26,11 +26,12 @@
 | Priority | Gap | Concrete impact | Recommendation |
 |---|---|---|---|
 | 🔶 | `TokenValidationRequest` represents only `{ token }` and does not address the §2.1 `application/x-www-form-urlencoded` POST contract (`src/Identity/TokenValidationRequest.cs:6-11`) | Consumers must hand-build the form body; nothing steers them away from JSON-POSTing the DTO, which conformant servers reject or ignore | Document the wire mapping next to the type, or add a helper that produces `token=<value>` form content |
-| 🔵 | `token_type_hint` (§2.1 OPTIONAL) is absent from the request model | No correctness impact — the hint is optional and the server MUST search all token types without it — but busy authorization servers lose the lookup optimization | Add `string? TokenTypeHint` |
 | 🔵 | `active` is a non-nullable `bool` (`:14-15`) and no §2.3 error shape exists | An HTTP 401 body or a spec-violating response without `active` deserializes to `active=false` — fail-closed, but a consumer cannot distinguish "token inactive" from "call failed / misconfigured" | Keep the DTO simple but document that callers must check the HTTP status before trusting `active`; consider `bool?` |
-| 🔵 | No tests cover `TokenIntrospectionResponse`, `TokenValidationRequest`, or the converter (all 6 files in `tests/Sufficit.Identity.Core.Tests/` read; none references them) | The `aud` dual-shape behavior and the Unix-second semantics can regress unnoticed | Round-trip tests: string `aud`, array `aud`, null `aud`, and `exp` → `IsExpired` |
 
-Searches performed for claimed absences: all 27 files under `src/Identity/` were read in full — no occurrence of `token_type_hint`, `FormUrlEncoded`, `HttpClient`, `MemoryCache`, or `Cache-Control`; no introspection route/endpoint exists (no ASP.NET Core packages in `src/Sufficit.Identity.Core.csproj`, verified by reading it). All 6 test files under `tests/Sufficit.Identity.Core.Tests/` were read — none references `TokenIntrospectionResponse`, `TokenValidationRequest`, or `StringOrStringArrayJsonConverter`.
+Resolved in `c0b4d8e`: `token_type_hint` is now on the request model (`src/Identity/TokenValidationRequest.cs:17-22`), omitted from the wire when absent and covered by `tests/Sufficit.Identity.Core.Tests/TokenResponseOptionalityTests.cs`. The §2.1 form-encoding note above stands as guidance.
+| 🔵 | No tests cover `TokenIntrospectionResponse`, `TokenValidationRequest`, or the converter (all 6 test classes in `tests/Sufficit.Identity.Core.Tests/` were read; none references them) | The `aud` dual-shape behavior and the Unix-second semantics can regress unnoticed | Round-trip tests: string `aud`, array `aud`, null `aud`, and `exp` → `IsExpired` |
+
+Searches performed for claimed absences: all 27 files under `src/Identity/` were read in full — no occurrence of `token_type_hint`, `FormUrlEncoded`, `HttpClient`, `MemoryCache`, or `Cache-Control`; no introspection route/endpoint exists (no ASP.NET Core packages in `src/Sufficit.Identity.Core.csproj`, verified by reading it). All 6 test classes under `tests/Sufficit.Identity.Core.Tests/` were read — none references `TokenIntrospectionResponse`, `TokenValidationRequest`, or `StringOrStringArrayJsonConverter`.
 
 ## Intentional divergences
 
@@ -43,6 +44,7 @@ Searches performed for claimed absences: all 27 files under `src/Identity/` were
 | Reviewed (UTC) | Commit | Summary of changes |
 |---|---|---|
 | 2026-09-12T23:02Z | `46eac0a` | Initial analysis (regenerate mode; no prior document existed) |
+| 2026-09-12T23:55Z | `c0b4d8e` | `token_type_hint` added and test-covered; status raised to compliant |
 
 ## References
 

@@ -1,7 +1,7 @@
 # RFC 9068 — JWT access token profile: the `entitlements` claim
 
-**Status:** 🟡 partial — the claim name is the registered one and value vocabulary is free by design, but the repository pins a **non-existent section number** (§2.2.3.2) as its normative citation in code, tests and four documents.
-**Last reviewed:** 2026-09-12T23:02Z · commit `46eac0a`
+**Status:** ✅ compliant — the claim name is the registered one, the value vocabulary is free by design, and the citation defect (a non-existent §2.2.3.2) is fixed across this repository in `c0b4d8e`. The same wrong citation found in sibling repositories (sufficit-identity, sufficit-ai, sufficit-efdata) is being fixed there.
+**Last reviewed:** 2026-09-12T23:55Z · baseline `46eac0a` · fixes verified at `c0b4d8e`
 **Project role:** consumer of authorization claims carried in access tokens. The library reads the `entitlements` claim from a host-validated principal and interprets each value; issuing tokens and profile-conformant validation (§4) are authorization-server / host duties.
 
 ## What the standard requires (the parts that touch this project)
@@ -26,8 +26,7 @@
 
 | Priority | Gap | Concrete impact | Recommendation |
 |---|---|---|---|
-| 🔴 | The normative citation "RFC 9068 §2.2.3.2" is wrong (no such section). Pinned in: `src/Identity/ClaimTypes.cs:42-43`, `src/Identity/ClaimExtensions.cs:21`, `tests/Sufficit.Identity.Core.Tests/WireContractTests.cs:34`, `README.md:77`, `docs/decisions/0001-entitlement-naming.md:21`, `docs/entitlements.md:116` and `:136` | A test-pinned wrong section number propagates to every consumer that follows the reference; readers who check the RFC find nothing at that anchor and may distrust the (correct) claim name and semantics | Change to §2.2.3.1 (optionally "registered at §7.2.1.3") in all seven places |
-| 🔵 | `typ: at+jwt` explicit typing (§2.1/§4, and BCP 225 §3.11) is not mentioned in `docs/integration.md` | A host accepting ID tokens as access tokens is the exact cross-JWT confusion §5 warns about; the audience check usually catches it, but typing is the cheap second lock | Add one line to the Authenticate section |
+Resolved in `c0b4d8e`: all eight §2.2.3.2 citations in this repository now read §2.2.3.1 (code, tests and four documents, anchors included), and `docs/integration.md:24-31` + checklist `:98-100` prescribe the `typ: at+jwt` restriction alongside the pinned algorithm list and exact-issuer match.
 
 Searches performed for claimed absences: `identitymodel|jwtsecuritytoken|tokenvalidationparameters` in `src/**/*.cs` — no hits (the library neither issues nor validates JWT access tokens; §2 and §4 issuer/validator duties are host-side).
 
@@ -41,6 +40,7 @@ Searches performed for claimed absences: `identitymodel|jwtsecuritytoken|tokenva
 | Reviewed (UTC) | Commit | Summary of changes |
 |---|---|---|
 | 2026-09-12T23:02Z | `46eac0a` | Initial analysis — found the §2.2.3.2 citation defect |
+| 2026-09-12T23:55Z | `c0b4d8e` | §2.2.3.1 citations fixed in all 8 places; `typ` guidance added; status raised to compliant |
 
 ## References
 

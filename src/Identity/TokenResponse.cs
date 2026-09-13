@@ -17,6 +17,7 @@ namespace Sufficit.Identity
         public string AccessToken { get; set; } = default!;
 
         [JsonPropertyName("id_token")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string? IdToken { get; set; }
 
         [JsonPropertyName("expires_in")]
@@ -27,10 +28,12 @@ namespace Sufficit.Identity
 
         /// <summary>OPTIONAL when identical to the scope requested by the client; REQUIRED when it differs (RFC 6749 §5.1). Null when the server omits it.</summary>
         [JsonPropertyName("scope")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string? Scope { get; set; }
 
         /// <summary>OPTIONAL per RFC 6749 §5.1 — null when not issued (e.g. the client-credentials grant, §4.4.3, SHOULD NOT include one).</summary>
         [JsonPropertyName("refresh_token")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string? RefreshToken { get; set; }
     }
 }

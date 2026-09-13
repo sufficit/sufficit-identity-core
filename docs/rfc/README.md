@@ -5,25 +5,28 @@ and where it deliberately does not. Each document pins the reviewed commit,
 cites evidence as `path:line`, and separates gaps from intentional
 divergences.
 
-**Last reviewed:** 2026-09-12T23:02Z · commit `46eac0a` · scope: `src/` of
-this repository (a class library; hosts own the HTTP stack).
+**Last reviewed:** 2026-09-12T23:55Z · baseline `46eac0a` · fixes verified at
+`c0b4d8e` · scope: `src/` of this repository (a class library; hosts own the
+HTTP stack).
 
 ## Applicable standards
 
 | Standard | Status | One line |
 | --- | --- | --- |
-| [RFC 6749 + 6750](rfc-6749-6750-oauth-token-client.md) — OAuth 2.0 / Bearer | 🟡 partial | `TokenResponse` mirrors §5.1, but `refresh_token`/`scope` are non-nullable although the spec makes them OPTIONAL/conditional |
-| [RFC 7662](rfc-7662-token-introspection.md) — Token Introspection | ✅ compliant | Response model is §2.2 member-for-member, `aud` string-or-list included; advisory: add `token_type_hint`, warn about inactive-token members |
+| [RFC 6749 + 6750](rfc-6749-6750-oauth-token-client.md) — OAuth 2.0 / Bearer | 🟡 partial | §5.1 wire names and optionality exact (nullability fixed in `c0b4d8e`); `expires_in` non-nullable and no §5.2 error model remain |
+| [RFC 7662](rfc-7662-token-introspection.md) — Token Introspection | ✅ compliant | Response model is §2.2 member-for-member, `aud` string-or-list, `token_type_hint` on the request side (added in `c0b4d8e`) |
 | [RFC 7519](rfc-7519-json-web-token-claims.md) — JWT claims | ✅ compliant | Registered names and shapes modelled exactly; `directive` private name is a documented, test-pinned transition divergence |
-| [RFC 9068](rfc-9068-jwt-access-token-entitlements.md) — JWT access token profile | 🟡 partial | 🔴 The claim name is right but the repo pins a **non-existent section (§2.2.3.2)**; correct citation is §2.2.3.1 (registered §7.2.1.3) |
-| [RFC 8725](rfc-8725-jwt-bcp-token-validation.md) — JWT BCP 225 | ⚪ partially N/A | Library validates nothing by design; the three top checks are already prescribed — pinning the algorithm set and issuer match are the missing lines |
-| [RFC 8259 + 7493](rfc-8259-7493-json-interop.md) — JSON / I-JSON | 🟡 partial | Wire contracts are clean I-JSON; convenience `DateTime` properties drop the UTC marker; duplicate members silently accepted |
+| [RFC 9068](rfc-9068-jwt-access-token-entitlements.md) — JWT access token profile | ✅ compliant | Claim name registered (§2.2.3.1, registry §7.2.1.3); the non-existent-§2.2.3.2 citation defect was fixed in `c0b4d8e` |
+| [RFC 8725](rfc-8725-jwt-bcp-token-validation.md) — JWT BCP 225 | ⚪ partially N/A | Library validates nothing by design; the guide now pins algorithms, exact issuer and `typ: at+jwt` (`c0b4d8e`) |
+| [RFC 8259 + 7493](rfc-8259-7493-json-interop.md) — JSON / I-JSON | 🟡 partial | Wire contracts are clean I-JSON; DateTime helpers now `Kind=Utc` (`c0b4d8e`); duplicate members still silently accepted |
 | [RFC 9562](rfc-9562-uuid-identifiers.md) — UUIDs | ✅ compliant | Compare-by-value so spelling cannot split an identity; Nil UUID as sentinel; accepted grammar is wider than the §4 ABNF (documented) |
 
 The one 🔴 finding of this review — the wrong RFC 9068 section number pinned
 in code, tests and four documents — is detailed in the
-[RFC 9068](rfc-9068-jwt-access-token-entitlements.md) document, with all
-seven affected locations.
+[RFC 9068](rfc-9068-jwt-access-token-entitlements.md) document; all eight
+locations in this repository were corrected in `c0b4d8e`, and the same wrong
+citation found in sibling repositories (sufficit-identity, sufficit-ai,
+sufficit-efdata) is being fixed in their own commits.
 
 ## Judged not applicable, and why
 
@@ -50,3 +53,4 @@ interoperability/reliability, 🔵 polish.
 | Reviewed (UTC) | Commit | Summary of changes |
 | --- | --- | --- |
 | 2026-09-12T23:02Z | `46eac0a` | Initial review: 7 applicable standards, families excluded with evidence |
+| 2026-09-12T23:55Z | `c0b4d8e` | Fixes applied: §2.2.3.1 citations (×8), TokenResponse nullability + wire omission, token_type_hint, UtcDateTime helpers, integration/validation guidance; statuses updated (9068 and 7662 raised to compliant) |

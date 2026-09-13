@@ -1,7 +1,7 @@
 # RFC 8259 + RFC 7493 — JSON and the I-JSON message format
 
-**Status:** 🟡 partial — the wire contracts are clean I-JSON, but convenience `DateTime` properties drop the UTC marker and duplicate member names are accepted silently.
-**Last reviewed:** 2026-09-12T23:02Z · commit `46eac0a`
+**Status:** 🟡 partial — the wire contracts are clean I-JSON and the convenience `DateTime` helpers now carry `Kind=Utc` (fixed in `c0b4d8e`); duplicate member names are still accepted silently on read.
+**Last reviewed:** 2026-09-12T23:55Z · baseline `46eac0a` · fixes verified at `c0b4d8e`
 **Project role:** producer and consumer of JSON DTOs (`TokenResponse`, `TokenIntrospectionResponse`, `AuthorizationState`) that cross service boundaries in host applications; the library never runs an HTTP stack itself.
 
 ## What the standard requires
@@ -28,9 +28,10 @@ Only the requirements that touch a DTO library:
 
 | Priority | Gap | Concrete impact | Recommendation |
 |---|---|---|---|
-| 🔶 | `ExpirationDateTime`, `IssuedAtDateTime`, `NotBeforeDateTime` return `DateTime` via `.DateTime`, producing `Kind=Unspecified` values (`src/Identity/TokenIntrospectionResponse.cs:104-118`) | A consumer formatting or persisting these values cannot tell they are UTC; RFC 7493 §4.3 exists precisely to stop timezone-by-assumption. `IsExpired` still compares correctly against `DateTime.UtcNow` (`:124`) | Expose `DateTimeOffset` properties (or use `.UtcDateTime`) so the UTC offset travels with the value |
 | 🔵 | Duplicate JSON member names are accepted silently on read (RFC 7493 §2.3 forbids senders; .NET POCO deserialization is documented last-wins — inferred from documented behavior, not executed here) | A hostile or buggy token source could emit `{"active":true,...,"active":false}` and the outcome depends on serializer internals | Acceptable for an internal library; document the reliance on last-wins if these DTOs ever front an untrusted boundary |
 | 🔵 | `UserPolicyBase` carries `[DataContract]/[DataMember(Name=...)]` legacy names (`identitlement`, `idcontext`) alongside JSON usage (`src/Identity/UserPolicyBase.cs:8-25`) | Two serialization stacks can emit two different member names for the same field; today only the JSON path is pinned by tests | State in XML docs that the DataContract names are legacy-only, or drop the attributes in the next major |
+
+Resolved in `c0b4d8e`: the introspection `DateTime` helpers now return `.UtcDateTime` (`Kind=Utc`) instead of unspecified-local values (`src/Identity/TokenIntrospectionResponse.cs:103-119`).
 
 Searches performed for claimed absences: `base64|dataurl` in `*.cs` under `src/` (no hits — no binary-data members, RFC 7493 §4.4 not applicable); `newtonsoft|jsonconvert\.|jobject|jarray` in `*.cs` under `src/` (no hits).
 
@@ -44,6 +45,7 @@ Searches performed for claimed absences: `base64|dataurl` in `*.cs` under `src/`
 | Reviewed (UTC) | Commit | Summary of changes |
 |---|---|---|
 | 2026-09-12T23:02Z | `46eac0a` | Initial analysis |
+| 2026-09-12T23:55Z | `c0b4d8e` | Introspection DateTime helpers fixed to `Kind=Utc`; duplicate-members and DataContract items remain open |
 
 ## References
 
