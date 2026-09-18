@@ -11,7 +11,11 @@ namespace Sufficit.Telephony
 
         public const string RoleID = TelephonyAdminRole.UniqueID;
 
-        public const string NormalizedKey = TelephonyAdminRole.NormalizedName;
+        // 2026-09-12: chave deliberadamente DESacoplada do nome do papel. Era
+        // `TelephonyAdminRole.NormalizedName`, o que fazia renomear o papel
+        // mudar silenciosamente a chave persistida nas claims. Migração:
+        // PLAN-20260911-admin-suffix-migration.md (fase 0), decisão 0006.
+        public const string NormalizedKey = "telephonyadmin";
 
         public override Guid ID => Guid.Parse(UniqueID);
 

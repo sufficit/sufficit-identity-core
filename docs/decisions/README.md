@@ -13,6 +13,7 @@ with its reason is what stops a deliberate trade-off from being "fixed".
 | [0003](0003-authorization-out-of-the-token.md) | Authorization data is resolved by the application, not carried in the token |
 | [0004](0004-scope-naming-and-audience.md) | Claim-releasing scopes carry no audience; API scopes are named after the API |
 | [0005](0005-manifest-location.md) | Each product's provisioning manifest lives in its own repository, at the root (`identity-manifest.v1.json`) |
+| [0006](0006-entitlement-key-naming-verbs.md) | Entitlement keys are `domínio.recurso.verbo` (`read`/`write`/…) and never role names |
 
 ## Writing one
 

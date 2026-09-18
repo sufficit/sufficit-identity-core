@@ -156,7 +156,7 @@ modelo correto) e auditar as strings do Blazor.
 ### 3.3 Acoplamento chave↔papel
 
 `TelephonyAdminEntitlement.NormalizedKey = TelephonyAdminRole.NormalizedName` (mesma constante). Renomear o
-papel mudaria a chave persistida silenciosamente. **Pré-requisito da fase 0:** transformar em literais
+papel mudaria a chave persistida silenciosamente. **Pré-requisito da fase 0** (✅ feito 12/09, branch `refactor/entitlement-key-decoupling`): transformar em literais
 independentes + teste anti-regressão.
 
 ### 3.4 Entitlements concedidos em produção sem enforcement conhecido
