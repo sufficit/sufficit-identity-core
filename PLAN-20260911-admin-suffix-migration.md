@@ -110,7 +110,7 @@ Se a fusão de papéis não for aceita: alternativa é renomear `telephonyadmin`
 
 ### Fase 0 — Preparação (sem mudança de comportamento) — ~1 dia
 
-> **Status (12/09)**: itens **1 e 3 implementados** na branch `refactor/entitlement-key-decoupling`
+> **Status (12/09)**: itens **1 e 3 implementados e mesclados na main** (merge `9e89c7d`)
 > (chave literal + `EntitlementKeyDecouplingTests` — 39/39 testes verdes; decisão registrada em
 > `docs/decisions/0006-entitlement-key-naming-verbs.md`). Item **2 (aliases) pendente** até os nomes
 > finais serem validados (§5): o mapa `LegacyEntitlementKeys` referencia as chaves novas.
