@@ -14,12 +14,14 @@ namespace Sufficit.Finance
         public const string UniqueID = "1cea282f5b3645d685e6d1ad866d2b27";
         public const string RoleID = FinancialRole.UniqueID;
 
+        public const string NormalizedKey = "bankbillet";
+
         public override Guid ID => Guid.Parse(UniqueID);
 
         public override Guid IDRole => Guid.Parse(RoleID);
 
         public override string Name => "acesso a boletos";
 
-        public override string Key => "bankbillet";
+        public override string Key => NormalizedKey;
     }
 }
