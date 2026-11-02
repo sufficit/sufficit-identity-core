@@ -11,7 +11,7 @@ namespace Sufficit.Telephony
     public class PortabilityEntitlement : Entitlement
     {
         public const string UniqueID = "fe92165906064c43982f0c3baa5cf90a";
-        public const string RoleID = TelephonyManagerRole.UniqueID;
+        public const string RoleID = TelephonyDialPlanEditorRole.UniqueID;
 
         public override Guid ID => Guid.Parse(UniqueID);
 
