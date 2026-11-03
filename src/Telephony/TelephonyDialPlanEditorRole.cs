@@ -6,7 +6,7 @@ using System.Text;
 namespace Sufficit.Telephony
 {
     /// <summary>
-    ///     Comes with the dial plan and portability entitlements, usually for one company, so customers hold it.
+    ///     Comes with the dial plan entitlement, usually for one company, so customers hold it.
     ///     It is not internal and never grants access across customers (the "manager" role is the internal one).
     /// </summary>
     public struct TelephonyDialPlanEditorRole : IRole

@@ -1,6 +1,6 @@
 # Plano de migração — eliminar o sufixo "admin" de entitlements e papéis derivados
 
-> **Correction (owner, 2026-11-02):** `telephonymanager` was renamed `telephony.dialplan.editor` (`TelephonyDialPlanEditorRole`, same Guid). It comes with the dial plan and portability entitlements, usually for one company, so customers hold it. Do **not** merge `telephonyadmin` into it, and never use it for access across customers: `manager` is reserved for internal staff, and global access means `IsManager()` or an entitlement on `Guid.Empty`. Mentions of `telephonymanager` below are historical.
+> **Correction (owner, 2026-11-02):** `telephonymanager` was renamed `telephony.dialplan.editor` (`TelephonyDialPlanEditorRole`, same Guid). It comes with the dial plan entitlement, usually for one company, so customers hold it; portability has its own role, `telephony.portability.editor`. Do **not** merge `telephonyadmin` into it, and never use it for access across customers: `manager` is reserved for internal staff, and global access means `IsManager()` or an entitlement on `Guid.Empty`. Mentions of `telephonymanager` below are historical.
 
 Data: 2026-09-11 · Estado: PROPOSTA (aguarda validação de nomes e janela) · Escopo: sistema de permissões inteiro
 
